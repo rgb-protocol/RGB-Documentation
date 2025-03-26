@@ -6,7 +6,7 @@ As [mentioned earlier](../schema-interface.md), an RGB Schema is the analog of a
 
 The [issuer](../../annexes/glossary.md#contract-participant) of an asset on RGB uses (and makes available to the public) a Schema in order to define the issuance properties encoded in the Genesis. This way, the contract can be supported by RGB wallets and become fully operational. Thus, **when the users receive some information about an asset on RGB (data and contract) they must validate them against the Schema distributed by the issuer of that asset.**
 
-In fact, the Schema validation is the very first operation step that a user needsrepresents to undergo before interacting in any way with the contract (e.g. to perform the desired contract operations).
+In fact, the Schema validation is the very first operation step that a user needs to undergo before interacting in any way with the contract (e.g. to perform the desired contract operations).
 
 From a functional point of view, the **Schema construct addresses the following questions**:
 
@@ -14,7 +14,7 @@ From a functional point of view, the **Schema construct addresses the following 
 * What kinds of [Valences](../../annexes/glossary.md#valency) exist?
 * What [Global State](../../rgb-state-and-operations/components-of-a-contract-operation.md#global-state) does the contract have?
 * How is [Genesis](../../annexes/glossary.md#genesis) structured?
-* What kind of [State Transitions](../../annexes/glossary.md#state-transition) and [State Extensions](../../annexes/glossary.md#state-extension) are possible?
+* What kind of [State Transitions](../../annexes/glossary.md#state-transition) are possible?
 * What [Metadata](../../rgb-state-and-operations/components-of-a-contract-operation.md#metadata) can contract operations have?
 * How state data are allowed to change within state transitions?
 * What sequences of transitions are allowed?
@@ -42,6 +42,8 @@ In every Contract Operation performed in the client-side validation phase, the C
 
 As [mentioned earlier](../../rgb-state-and-operations/features-of-rgb-state.md#the-validation-ownership-paradigm-in-rgb), **Schema clearly differentiates contract developers from issuers**, who may know nothing about coding and programming. This kind of approach makes extensive use of **contract templates** which can be used promptly by issuers who may benefit from avoiding common programming mistakes in the implementation phase.
 
-After compilation, the Schema is encoded in a `.rgb` binary file or in an `.rgba` armored binary file, which can be imported by the wallet software.
+After compilation, the Schema is encoded in a `.rgb` binary file or in an `.rgba` armored binary file, which can be imported by the wallet software. 
+
+An issuer will then create a particular instance of a schema by filling it in with data such as `precision`, `name` and `issuedSupply`. Initial allocations are also defined, and the resulting structure is encoded into a consignment file and shared with the new owners. Once the first state transition happens, the contract will (indirectly) be committed onchain and take full effect.
 
 In the next subsection, we will provide an example of an actual Schema used for the issuance of a **Non Inflatable Fungible Asset.**

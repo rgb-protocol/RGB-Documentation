@@ -65,9 +65,8 @@ An update to the [contract state](glossary.md#contract-state) performed accordin
 
 Contract operations include:
 
-* [State Transition](glossary.md#state-transition)
 * [Genesis](glossary.md#genesis)
-* [State Extension](glossary.md#state-extension)
+* [State Transition](glossary.md#state-transition)
 
 ### Contract Participant
 
@@ -75,7 +74,6 @@ An actor who participates in contract operations. Contract parties are classifie
 
 * **Contract issuer**: an actor creating contract [Genesis](glossary.md#genesis).
 * **Contract party**: all actors who have some [ownership](glossary.md#ownership) rights over RGB [contract state](glossary.md#contract-state) which have been provided through an [Assignment](glossary.md#assignment).
-* **Public party**: an actor who is able to construct [State Extensions](glossary.md#state-extension). Can exist only in contracts providing [Valencies](glossary.md#valency) to be redeemed by State Extension.
 
 ### Contract Rights
 
@@ -83,7 +81,6 @@ RGB contract parties have different rights as a part of the contract conditions 
 
 * Ownership rights: the rights associated with the [ownership](glossary.md#ownership) of some UTXO referenced by a [Seal Definition](glossary.md#seal-definition).
 * Executive rights: the ability to construct the [contract state](glossary.md#contract-state) in a final form, i.e. to construct a valid [state transition](glossary.md#state-transition) satisfying [schema](glossary.md#schema) validation rules.
-* Public rights: a right under some Schema to use a contract [Valency](glossary.md#valency) and construct a valid [State Extension](glossary.md#state-extension).
 
 ### Contract State
 
@@ -167,20 +164,6 @@ A transaction which lacks some element of its signature and which can be complet
 
 [Link](https://github.com/bitcoin/bips/blob/master/bip-0174.mediawiki)
 
-### Pedersen commitment
-
-A particular type of cryptographic [commitment](glossary.md#commitment) characterized by the [homomorphic](https://en.wikipedia.org/wiki/Homomorphism) property with respect to the addition operation. This means that given a certain $$\text{commit}$$ function, it is possible to verify the commitment given by the sum of two data without revealing the data itself. That is, given $$m_1$$, $$m_2$$, $$r_1$$, and $$r_2$$, if $$C_1 = \text{commit}(m_1,r_1)$$ and $$C_2 = \text{commit}(m_2,r_2)$$:
-
-$$C_3 = C_1 \cdot C_2 = \text{commit}(m_1+m_2,r_1 + r_2)$$
-
-So it is possible to verify the total sum without revealing the individual values. This operation, for example, becomes useful to conceal the amounts of tokens transacted.
-
-[Article Link](https://link.springer.com/chapter/10.1007/3-540-46766-1\_9)
-
-### Redeem
-
-A construct present in [State Extension](glossary.md#state-extension) which references a previously-declared [Valency](glossary.md#valency).
-
 ### Schema
 
 A declarative piece of code that contains the set of variables, rules, and [business logic](glossary.md#business-logic) according to which an RGB contract works.
@@ -206,12 +189,6 @@ A promise to [commit](glossary.md#commitment) to a yet unknown message in the fu
 ### Stash
 
 The set of client-side data related to one or more [contracts](glossary.md#contract) that undergo [validation](glossary.md#client-side-validation) and are stored by the users.
-
-### State Extension
-
-A contract operation that allows for the redeeming of some [Valencies](glossary.md#valency). It needs to be closed by a [State Transition](glossary.md#state-transition) in order to put in effect the changes to the contract expressed by the Valencies.
-
-[Link](../rgb-state-and-operations/state-transitions.md#state-extensions)
 
 ### State Transition
 

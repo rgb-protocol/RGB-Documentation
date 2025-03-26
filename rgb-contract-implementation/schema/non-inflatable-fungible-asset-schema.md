@@ -11,7 +11,7 @@ We can observe that a Schema can be divided into several general sections:
 * A _header_ which contains:
   * &#x20;An optional Root `SchemaId` which indicates a limited form of inheritance from some master schema.&#x20;
   * A reserved `Feature` field which provides room for additional future extensions of contract schema.
-* A first section in which all the **State Types** and related variables (both pertaining to [Global](../../rgb-state-and-operations/components-of-a-contract-operation.md#global-state) and[ Assignments](../../rgb-state-and-operations/components-of-a-contract-operation.md#assignments)) and the [Valencies](../../annexes/glossary.md#valency) are declared.
+* A first section in which all the **State Types** and related variables (both pertaining to [Global](../../rgb-state-and-operations/components-of-a-contract-operation.md#global-state) and [Assignments](../../rgb-state-and-operations/components-of-a-contract-operation.md#assignments)) are declared.
 * A second section where all the possible [Contract Operations](../../annexes/glossary.md#contract-operation) referencing the previously declared State Types are encoded.
 * A field containing the declaration of the **Strict Type System** being used in the whole schema.
 * A last section containing the **validation scripts** for all the operations.
@@ -20,100 +20,95 @@ After this layout indication, we provide below the actual Rust Code of the schem
 
 {% code fullWidth="true" %}
 ```rust
-fn nia_schema() -> SubSchema {                      //  --->    (1) 
-    
+fn nia_schema() -> Schema { 
+
     // definitions of libraries and variables
 
     Schema {
-        ffv: zero!(),                                                                           // --+                                                      
-        subset_of: None,                                                                        //   |  (2) 
-        type_system: types.type_system(),                                                       // --+     
-        global_types: tiny_bmap! {                                                              // --+
-            GS_NOMINAL => GlobalStateSchema::once(types.get("RGBContract.DivisibleAssetSpec")), //   |  
-            GS_DATA => GlobalStateSchema::once(types.get("RGBContract.ContractData")),          //   |
-            GS_TIMESTAMP => GlobalStateSchema::once(types.get("RGBContract.Timestamp")),        //   |  (3)
-            GS_ISSUED_SUPPLY => GlobalStateSchema::once(types.get("RGBContract.Amount")),       //   |
-        },                                                                                      // --+
-        owned_types: tiny_bmap! {                                               // --+
-            OS_ASSET => StateSchema::Fungible(FungibleType::Unsigned64Bit),     //   |  (4)
-        },                                                                      // --+                    
-        valency_types: none!(),                          //  --->   (5)
-        genesis: GenesisSchema {                         //  --+ -------> Contract Operations declaration start here
-            metadata: Ty::<SemId>::UNIT.id(None),        //    |
-            globals: tiny_bmap! {                        //    |
-                GS_NOMINAL => Occurrences::Once,         //    |  
-                GS_DATA => Occurrences::Once,            //    |
-                GS_TIMESTAMP => Occurrences::Once,       //    |
-                GS_ISSUED_SUPPLY => Occurrences::Once,   //    |   (6) 
-            },                                           //    |
-            assignments: tiny_bmap! {                    //    |
-                OS_ASSET => Occurrences::OnceOrMore,     //    | 
-            },                                           //    |
-            valencies: none!(),                          //  --+                 
+        ffv: zero!(),                                                                            // --+
+        name: tn!("NonInflatableAsset"),                                                         //   |  (1)
+        meta_types: none!(),                                                                     // --+
+        global_types: tiny_bmap! {                                                                       // --+
+            GS_NOMINAL => GlobalDetails {                                                                //   |
+                global_state_schema: GlobalStateSchema::once(types.get("RGBContract.AssetSpec")),        //   |
+                name: fname!("spec"),                                                                    //   |
+            },                                                                                           //   |
+            GS_TERMS => GlobalDetails {                                                                  //   |
+                global_state_schema: GlobalStateSchema::once(types.get("RGBContract.ContractTerms")),    //   |  (2)
+                name: fname!("terms"),                                                                   //   |
+            },                                                                                           //   |
+            GS_ISSUED_SUPPLY => GlobalDetails {                                                          //   |
+                global_state_schema: GlobalStateSchema::once(types.get("RGBContract.Amount")),           //   |
+                name: fname!("issuedSupply"),                                                            //   |
+            },                                                                                           //   |
+        },                                                                                               // --+
+        owned_types: tiny_bmap! {                                                             // --+
+            OS_ASSET => AssignmentDetails {                                                   //   |
+                owned_state_schema: OwnedStateSchema::Fungible(FungibleType::Unsigned64Bit),  //   |
+                name: fname!("assetOwner"),                                                   //   |  (3)
+                default_transition: TS_TRANSFER,                                              //   |
+            }                                                                                 //   |
+        },                                                                                    // --+
+        genesis: GenesisSchema {                                                 //  --+ -------> Contract declaration start here
+            metadata: none!(),                                                   //    |
+            globals: tiny_bmap! {                                                //    |
+                GS_NOMINAL => Occurrences::Once,                                 //    |
+                GS_TERMS => Occurrences::Once,                                   //    |
+                GS_ISSUED_SUPPLY => Occurrences::Once,                           //    |
+            },                                                                   //    |   (4)
+            assignments: tiny_bmap! {                                            //    |
+                OS_ASSET => Occurrences::OnceOrMore,                             //    |
+            },                                                                   //    |
+            validator: Some(LibSite::with(FN_NIA_GENESIS_OFFSET, alu_id)),       //    |
+        },                                                                       //  --+
+        transitions: tiny_bmap! {
+            TS_TRANSFER => TransitionDetails {                                   //  --+
+                transition_schema: TransitionSchema {                            //    |
+                    metadata: none!(),                                           //    |
+                    globals: none!(),                                            //    |
+                    inputs: tiny_bmap! {                                         //    |
+                        OS_ASSET => Occurrences::OnceOrMore                      //    |
+                    },                                                           //    |   (5)
+                    assignments: tiny_bmap! {                                    //    |
+                        OS_ASSET => Occurrences::OnceOrMore                      //    |
+                    },                                                           //    |
+                    validator: Some(LibSite::with(FN_NIA_TRANSFER_OFFSET, alu_id)//    |
+                },                                                               //    |
+                name: fname!("transfer"),                                        //    |
+            }                                                                    //  --+
         },
-        extensions: none!(),                             //  --->  (7) 
-        transitions: tiny_bmap! {                        //  --+      
-            TS_TRANSFER => TransitionSchema {            //    |
-                metadata: Ty::<SemId>::UNIT.id(None),    //    |
-                globals: none!(),                        //    |
-                inputs: tiny_bmap! {                     //    |
-                    OS_ASSET => Occurrences::OnceOrMore  //    |   (8)
-                },                                       //    |
-                assignments: tiny_bmap! {                //    |
-                    OS_ASSET => Occurrences::OnceOrMore  //    |
-                },                                       //    |
-                valencies: none!(),                      //    |
-            }                                            //  --+ 
-        },
-        script: Script::AluVM(AluScript {                                                                 // -+
-            libs: confined_bmap! { alu_id => alu_lib },                                                   //  |
-            entry_points: confined_bmap! {                                                                // (9)
-                EntryPoint::ValidateGenesis => LibSite::with(FN_GENESIS_OFFSET, alu_id),                  //  |
-                EntryPoint::ValidateTransition(TS_TRANSFER) => LibSite::with(FN_TRANSFER_OFFSET, alu_id), // -+
-            },
-        }),
+        default_assignment: Some(OS_ASSET),               //  --+ (6)
     }
 }
 ```
 {% endcode %}
 
-**(1)** It is possible to observe that the `nia_schema()` function has an output of type `SubSchema` which indicates the application an optional single level of inheritance from a more general template. This way, a generic Schema that has many useful features, can be partially reused according to the needs of the issuer.
-
-**(2)** In this section:
+**(1)** In this section:
 
 * &#x20;`ffv` statement indicates the version of the contract.
-* `subset_of` statement reflects the optional inheritance from a master contract template described at point 1. The `type_system` statement connects the strict type definition to the `StandardType` library of RGB.
+* `name` provides a human-readable identifier for the schema itself, although it provides no uniqueness guarantees
 
-**(3)** In this section `global_state` and its variables are declared, in particular:
+**(2)** In this section `global_state` and its variables are declared, in particular:
 
 * The token's `GS_NOMINAL` set of specifications which according to the [Strict Type Library](../../annexes/rgb-library-map.md#strict-types-and-strict-encoding) contain: the token full `name` , the `ticker`, some additional `details`, the digit `precision` of the asset.
-* `GS_DATA` containing some additional contract `data` such as a contract disclaimer.
-* `GS_TIMESTAMP` referring to the issuance date.
-* `GS_ISSUED_SUPPLY` which defines the maximum cap to the token issuance.
+* `GS_TERMS` containing some additional contract `terms` such as a disclaimer.
+* `GS_ISSUED_SUPPLY` which defines the initial supply of the token. In this case, since no inflation is allowed, it also represents the max supply.
 * The `Once` statement guarantees that all these declarations are associated with a single value.
 
-**(4)** In `owned_type` section, through the `OS_ASSET` statement, we can find the **StateType declaration** of the fungible token being transferred through the owned state assignment. The quantity of token used in the transfer is declared as a [Fungible Type](../../rgb-state-and-operations/components-of-a-contract-operation.md#owned-states) represented by a 64-bit unsigned integer.
+**(3)** In `owned_type` section, through the `OS_ASSET` statement, we can find the **StateType declaration** of the fungible token being transferred through the owned state assignment. The quantity of token used in the transfer is declared as a [Fungible Type](../../rgb-state-and-operations/components-of-a-contract-operation.md#owned-states) represented by a 64-bit unsigned integer.
 
-**(5)** In this line a declaration of non-existence of valencies for the contract is made: `valency_types: none!()`
-
-**(6)** This section of the contract schema marks the beginning of **Contract Operations' declaration section.** Starting from the operation allowed within `genesis` :
+**(4)** This section of the contract schema marks the beginning of **Contract Operations' declaration section.** Starting from the operation allowed within `genesis` :
 
 * No `metadata` are declared.
-* The instantiation, inside the Genesis state, of all the variables of the Global State variables previously defined in code section (3).&#x20;
-* The declaration of the first `assignment` of the token using the previously declared type `OS_ASSET`.&#x20;
-* No Valencies are declared for this Genesis through the `valencies: none!()` statement.
+* The instantiation, inside the Genesis state, of all the variables of the Global State variables previously defined in code section (2).&#x20;
+* The declaration of the first `assignment(s)` of the token using the previously declared type `OS_ASSET`. Note that the `OnceOrMore` statement allows more than one initial allocation, in case the issuer wants to split the supply among multiple owners.
 
-**(7)** With `extensions: none!()` statement the schema embeds the absence of any State Extension operation.
-
-**(8)** The `transitions` section provides the declaration of a single `TS_TRANSFER` operation which:
+**(5)** The `transitions` section provides the declaration of a single `TS_TRANSFER` operation which:
 
 * Contains no `metadata`.
 * Doesn't update the global state (it was defined only in Genesis).
-* Takes as `inputs` at leas one or more `OS_ASSET` types.
-* Declare the `assignments` of the very same `OS_ASSET` type as those of the inputs.
-* Declare absence of Valencies committed inside the operation.
+* Takes as `inputs` at **one or more** assignments of type `OS_ASSET`.
+* Allows to declare **one or more** `assignments` of type `OS_ASSET`.
+* Points to the `AluVM` script that should be **executed when validating** operations of this type.
 
-**(9)** In this final code section we can find the declaration of the a single AluVm `script` which is responsible for validating:
-
-* The issuance of the maximum number of token in `genesis`.
-* The validation of each `TS_TRANSFER` operation where the number of tokens in `inputs` must match the number declared in the `assignment`.
+**(6)** A **default assignment type** is defined, to be used for example to pay an invoice that doesn't specify one.
