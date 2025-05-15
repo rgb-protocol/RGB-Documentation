@@ -26,7 +26,6 @@
 
 ## RGB Contract Implementation
 
-* [Contract Implementation in RGB](rgb-contract-implementation/schema-interface.md)
 * [Schema](rgb-contract-implementation/schema/README.md)
   * [Schema example: Non-Inflatable Assets](rgb-contract-implementation/schema/non-inflatable-fungible-asset-schema.md)
 

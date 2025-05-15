@@ -21,9 +21,9 @@ To properly encode data in the state in a reproducible way, a [Strict Type Syste
 * In addition, compilation according to the Strict Type System produces two types of output:
   * A **compile-time Memory Layout**.
   * **Semantic identifiers** associated with memory layout (i.e., the commitment to the name of each data field). For instance, this type of construction is able to make detectable the change of a single variable name, which **doesn't change the memory layout** but **changes the semantics**.
-* Finally, Strict Type System allows for **versioning** of the compilation schema, thus enabling the tracking of consensus changes in contracts and the compilation engine. To this end each compilation of an RGB object, being it a Schema, an Interface, an Implementation, or RGB libraries themselves produce an **unique fingerprint** such as:
+* Finally, Strict Type System allows for **versioning** of the compilation schema, thus enabling the tracking of consensus changes in contracts and the compilation engine. To this end each compilation of an RGB object, being it a Schema or RGB libraries themselves, produces an **unique fingerprint** such as:
 
-`BEiLYE-am9WhTW1-oK8cpvw4-FEMtzMrf-mKocuGZn-qWK6YF#ginger-parking-nirvana`
+`RWhwUfTMpuP2Zfx1~j4nswCANGeJrYOqDcKelaMV4zU#remote-digital-pegasus`
 
 As a matter of fact, Strict Encoding is defined both at an extremely pure functional level (thus far away from object-oriented programming (OOP) philosophy) and at a very low level (almost a hardware definition, thus far removed from more abstract structures and languages).
 

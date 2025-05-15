@@ -52,7 +52,7 @@ The commitment is required to possess two fundamental security properties:
 
 The data transferred between parties that are subject to [client-side validation](glossary.md#client-side-validation). In RGB there are 2 types of consignment:
 
-* Contract Consignment: provided by the contract issuer including the information about the contract setup, such as the [Schema](glossary.md#schema), the [Genesis](glossary.md#genesis), the [Interface](glossary.md#interface), and the [Interface Implementation](glossary.md#interface-implementation).
+* Contract Consignment: provided by the contract issuer including the information about the contract setup, such as the [Schema](glossary.md#schema) and the [Genesis](glossary.md#genesis).
 * Transfer Consignment: provided by the payer user party and containing all the state transition history up to the [terminal consignment](glossary.md#terminal-consignment-consignment-endpoint).
 
 ### Contract
@@ -102,10 +102,6 @@ A directed graph that does not contain any directed cycle thus allowing topologi
 
 [Wikipedia link](https://en.wikipedia.org/wiki/Directed\_acyclic\_graph)
 
-### Engraving
-
-An optional data string that past owners of a contract can register in the contract history. It is implemented in the RGB21 [interface](glossary.md#interface).
-
 ### Extra Transaction Proof - ETP
 
 The part of the [Anchor](../commitment-layer/anchors.md) that embeds the additional data necessary for the validation of [Tapret](../commitment-layer/deterministic-bitcoin-commitments-dbc/tapret.md) commitment contained in a [taproot](glossary.md#taproot) transaction, such as the internal PubKey and the Script Path Spend.
@@ -115,16 +111,6 @@ The part of the [Anchor](../commitment-layer/anchors.md) that embeds the additio
 The set of data, regulated by a contract [schema](glossary.md#schema), which represents the starting state of every contract of RGB. It's the equivalent of Bitcoin Genesis Block at the client-side level.
 
 [Link](../rgb-state-and-operations/state-transitions.md#genesis)
-
-### Interface
-
-The set of code instructions that allow for the parsing of the compiled binary data contained in [Schema](glossary.md#schema), [Contract Operation](glossary.md#contract-operation), and [States](glossary.md#contract-state) in user and wallet-readable information.
-
-[Link](../rgb-contract-implementation/interface/)
-
-### Interface Implementation
-
-The set of code declarations that bind an [Interface](glossary.md#interface) to a [Schema](glossary.md#schema) and make possible the semantic translation operated by the Interface itself.
 
 ### Invoice
 

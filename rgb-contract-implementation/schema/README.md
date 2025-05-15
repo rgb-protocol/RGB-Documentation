@@ -2,7 +2,7 @@
 
 An RGB Schema defines, through coding, the necessary template for Genesis and embeds all the rules of available [contract operation](../../annexes/glossary.md#contract-operation) representing its [business logic](../../annexes/glossary.md#business-logic) allowing for the related [state](../../annexes/glossary.md#contract-state) to be updated.
 
-As [mentioned earlier](../schema-interface.md), an RGB Schema is the analog of a class for an OOP language. Hence such a construction is used to define the various standards for RGB contracts and assets, for example: fungible assets, collectibles, digital identities, etc.
+An RGB Schema is the analog of a class for an OOP language. Hence such a construction is used to define the various standards for RGB contracts and assets, for example: fungible assets, collectibles, digital identities, etc.
 
 The [issuer](../../annexes/glossary.md#contract-participant) of an asset on RGB uses (and makes available to the public) a Schema in order to define the issuance properties encoded in the Genesis. This way, the contract can be supported by RGB wallets and become fully operational. Thus, **when the users receive some information about an asset on RGB (data and contract) they must validate them against the Schema distributed by the issuer of that asset.**
 
