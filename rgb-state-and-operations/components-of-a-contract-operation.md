@@ -106,7 +106,6 @@ The table below provides a summary of the rules regarding the permitted modifica
 | **Mutates Global State** |      ✗      |           ✓          |
 | **Adds Owned State**     |      ✓      |           ✓          |
 | **Mutates Owned State**  |      ✗      |           ✓          |
-| **Adds Valencies**       |      ✓      |           ✓          |
 
 As a final consideration of this section, in the following table we provide a summary of the main scope-related properties that the various kind of state data elements exhibit in the RGB protocol.
 

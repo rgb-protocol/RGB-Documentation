@@ -11,7 +11,6 @@ In fact, the Schema validation is the very first operation step that a user need
 From a functional point of view, the **Schema construct addresses the following questions**:
 
 * What kinds of owned states and [Assignments](../../annexes/glossary.md#assignment) exist?
-* What kinds of [Valences](../../annexes/glossary.md#valency) exist?
 * What [Global State](../../rgb-state-and-operations/components-of-a-contract-operation.md#global-state) does the contract have?
 * How is [Genesis](../../annexes/glossary.md#genesis) structured?
 * What kind of [State Transitions](../../annexes/glossary.md#state-transition) are possible?
@@ -30,7 +29,6 @@ Among the most important properties, a Schema:
   * Metadata.
   * Owned state.
   * Global state.
-  * Valences.
   * Contract Operation.
 * Defines all the data structure required for Genesis operation, which marks the first instantiation of the contract.
 * Allows for **programmed updates to the contract without** having to modify the infrastructure software, so that wallets and explorers can accept modified asset types without making any changes to their respective code.
@@ -42,7 +40,7 @@ In every Contract Operation performed in the client-side validation phase, the C
 
 As [mentioned earlier](../../rgb-state-and-operations/features-of-rgb-state.md#the-validation-ownership-paradigm-in-rgb), **Schema clearly differentiates contract developers from issuers**, who may know nothing about coding and programming. This kind of approach makes extensive use of **contract templates** which can be used promptly by issuers who may benefit from avoiding common programming mistakes in the implementation phase.
 
-After compilation, the Schema is encoded in a `.rgb` binary file or in an `.rgba` armored binary file, which can be imported by the wallet software. 
+After compilation, the Schema is encoded in a `.rgb` binary file or in an `.rgba` armored binary file, which can be imported by the wallet software.
 
 An issuer will then create a particular instance of a schema by filling it in with data such as `precision`, `name` and `issuedSupply`. Initial allocations are also defined, and the resulting structure is encoded into a consignment file and shared with the new owners. Once the first state transition happens, the contract will (indirectly) be committed onchain and take full effect.
 

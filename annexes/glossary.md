@@ -214,12 +214,6 @@ A set of RGB [State Transitions](glossary.md#state-transition) that belong to th
 
 A Bitcoin Unspent Transaction Output. It is defined by a transaction hash and a _vout_ index which, collectively, constitute an [outpoint](https://en.bitcoin.it/wiki/Protocol\_documentation#tx).
 
-### Valency
-
-A public right having no state but which can be referenced and redeemed through a state extension.
-
-[Link](../rgb-state-and-operations/components-of-a-contract-operation.md#valencies)
-
 ### Witness Transaction
 
 The transaction that provides the [Seal](glossary.md#single-use-seal) closing operation around a message that contains a [Multi Protocol Commitment](glossary.md#multi-protocol-commitment-mpc) an [MPC](glossary.md#multi-protocol-commitment-mpc) Tree.
