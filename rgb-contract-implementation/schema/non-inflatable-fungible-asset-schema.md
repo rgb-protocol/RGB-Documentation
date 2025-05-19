@@ -4,7 +4,22 @@ In this section, we will look more closely at an actual example of an RGB Contra
 
 First, it's helpful to provide a general layout that is common to all Schemata.
 
-<figure><img src="../../.gitbook/assets/compiled_schema_structure.png" alt="Compiled Schema Structure"><figcaption><p><strong>General Layout of a Schema. Global States and Assignments of Owned States are declared and preceded by their own Type which makes possible their referencing in Contract Operations which are declared just after them. Finally, the Validation Scripts and the strict type system used inside the Schema are declared.</strong></p></figcaption></figure>
+```mermaid
+---
+title: General Layout of a Schema
+---
+block-beta
+  columns 7
+  t1["Global Types"] space k1("TypeId") blockArrowId1<[" "]>(right) v11("SemId") v12("MaxOccurrences") space
+  t2["Assignment Types"] space k2(["TypeId") blockArrowId2<[" "]>(right) block:group21:2 columns 1 v21("Declarative | Fungible | Structured") end space
+  space:7
+  t3["Genesis"] space v31("Metadata") space v32("Globals") space v33("Assignments")
+  t4["Transitions"] space k4("TypeId") blockArrowId4<[" "]>(right) v41("Metadata") v42("Globals") v44("Assignments")
+  space:7
+  t5["Strict type system"] space space:5
+  t6["Validation scripts"] space v6("Libs") space k6("Refs") blockArrowId6<[" "]>(right) v61("Entrypoint")
+```
+*Global States and Assignments of Owned States are declared and preceded by their own Type which makes possible their referencing in Contract Operations which are declared just after them. Finally, the Validation Scripts and the strict type system used inside the Schema are declared.*
 
 We can observe that a Schema can be divided into several general sections:
 
