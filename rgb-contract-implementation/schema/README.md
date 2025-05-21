@@ -1,6 +1,6 @@
 # Schema
 
-An RGB Schema represents a template that can be used to issue contracts having a common structure and business logic, embedding the rules of [contract operations](../../annexes/glossary.md#contract-operation) representing its [business logic](../../annexes/glossary.md#business-logic) and thus describing how its [state](../../annexes/glossary.md#contract-state) can be updated. Each contract implementing a schema assigns concrete values to contract fields in its Genesis, defining global state and initial owners for the newly created owned state.
+An RGB Schema represents a template that can be used to issue contracts having a common structure, embedding the rules of [contract operations](../../annexes/glossary.md#contract-operation) representing its [business logic](../../annexes/glossary.md#business-logic) and thus describing how its [state](../../annexes/glossary.md#contract-state) can be updated. Each contract implementing a schema assigns concrete values to contract fields in its Genesis, defining global state and initial owners for the newly created owned state.
 
 An RGB Schema is the analog of a class for an OOP language. Hence such a construction is used to define the various standards for RGB contracts and assets, for example: fungible assets, collectibles, digital identities, etc.
 

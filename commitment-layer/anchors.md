@@ -14,7 +14,7 @@ Where:
 
 ## MPC Proof
 
-The `MPC Proof` of the contract `c_i` consists of `pos_i` ,`cofactor` and `Merkle Proof` which were described [previously](multi-protocol-commitments-mpc.md#mpc-tree-construction).
+The `MPC Proof` of the contract `c_i` consists of `depth`, `cofactor` and `Merkle Proof` which were described [previously](multi-protocol-commitments-mpc.md#mpc-tree-construction).
 
 ## Extra Transaction Proof - ETP
 

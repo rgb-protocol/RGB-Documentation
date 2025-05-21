@@ -2,25 +2,6 @@
 
 In this section, we will look more closely at an actual example of an RGB Contract Schema written in Rust and contained in the [nia.rs](https://github.com/RGB-WG/rgb-schemata/blob/master/src/nia.rs) file from the [RGB Schemata Repository](../../annexes/rgb-library-map.md#rgb-schemata). The Repository contains an example set of schema templates related to other types of contracts. This Schema, which we will be using as an example in this chapter, allows for the contract setup of N**on-Inflatable Assets** **(NIA)** that can be considered as the RGB analog to Ethereum's fungible tokens created with the ERC20 standard.
 
-First, it's helpful to provide a general layout that is common to all Schemata.
-
-```mermaid
----
-title: General Layout of a Schema
----
-block-beta
-  columns 7
-  t1["Global Types"] space k1("TypeId") blockArrowId1<[" "]>(right) v11("SemId") v12("MaxOccurrences") space
-  t2["Assignment Types"] space k2(["TypeId") blockArrowId2<[" "]>(right) block:group21:2 columns 1 v21("Declarative | Fungible | Structured") end space
-  space:7
-  t3["Genesis"] space v31("Metadata") space v32("Globals") space v33("Assignments")
-  t4["Transitions"] space k4("TypeId") blockArrowId4<[" "]>(right) v41("Metadata") v42("Globals") v44("Assignments")
-  space:7
-  t5["Strict type system"] space space:5
-  t6["Validation scripts"] space v6("Libs") space k6("Refs") blockArrowId6<[" "]>(right) v61("Entrypoint")
-```
-*Global States and Assignments of Owned States are declared and preceded by their own Type which makes possible their referencing in Contract Operations which are declared just after them. Finally, the Validation Scripts and the strict type system used inside the Schema are declared.*
-
 We can observe that a Schema can be divided into several general sections:
 
 * A _header_ which contains:
@@ -110,13 +91,13 @@ fn nia_schema() -> Schema {
 * `GS_ISSUED_SUPPLY` which defines the initial supply of the token. In this case, since no inflation is allowed, it also represents the max supply.
 * The `Once` statement guarantees that all these declarations are associated with a single value.
 
-**(3)** In `owned_type` section, through the `OS_ASSET` statement, we can find the **StateType declaration** of the fungible token being transferred through the owned state assignment. The quantity of token used in the transfer is declared as a [Fungible Type](../../rgb-state-and-operations/components-of-a-contract-operation.md#owned-states) represented by a 64-bit unsigned integer.
+**(3)** In `owned_type` section, through the `OS_ASSET` statement, we can find the **StateType declaration** of the fungible token being transferred through the owned state assignment. The quantity of token used in the transfer is declared as a [Fungible Type](../../rgb-state-and-operations/components-of-a-contract-operation.md#owned-states) represented by a 64-bit unsigned integer. Additionally, we provide each assignment type with a default transition, which allows for instance to move it automatically to another seal when spending other allocations on the same UTXO.
 
 **(4)** This section of the contract schema marks the beginning of **Contract Operations' declaration section.** Starting from the operation allowed within `genesis` :
 
 * No `metadata` are declared.
 * The instantiation, inside the Genesis state, of all the variables of the Global State variables previously defined in code section (2).&#x20;
-* The declaration of the first `assignment(s)` of the token using the previously declared type `OS_ASSET`. Note that the `OnceOrMore` statement allows more than one initial allocation, in case the issuer wants to split the supply among multiple owners.
+* The declaration of the first `assignment(s)` of the token using the previously declared type `OS_ASSET`. Note that the `OnceOrMore` statement allows more than one allocation, in case the issuer wants to split the initial supply among multiple owners.
 
 **(5)** The `transitions` section provides the declaration of a single `TS_TRANSFER` operation which:
 

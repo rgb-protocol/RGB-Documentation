@@ -52,8 +52,8 @@ The commitment is required to possess two fundamental security properties:
 
 The data transferred between parties that are subject to [client-side validation](glossary.md#client-side-validation). In RGB there are 2 types of consignment:
 
-* Contract Consignment: provided by the contract issuer including the information about the contract setup, such as the [Schema](glossary.md#schema) and the [Genesis](glossary.md#genesis).
-* Transfer Consignment: provided by the payer user party and containing all the state transition history up to the [terminal consignment](glossary.md#terminal-consignment-consignment-endpoint).
+* **Contract Consignment**: provided by the contract issuer, includes the information about the contract setup, such as the [Schema](glossary.md#schema) and the [Genesis](glossary.md#genesis).
+* **Transfer Consignment**: provided by the payer to the payee, contains all the state transition history from [Genesis](glossary.md#genesis) to the newly created unspent [Assignments](glossary.md#assignment).
 
 ### Contract
 
@@ -185,10 +185,6 @@ The most important [contract operation](glossary.md#contract-operation) that mak
 ### Taproot
 
 The Bitcoin's Segwit v1 transaction format detailed in [BIP341](https://github.com/bitcoin/bips/blob/master/bip-0341.mediawiki) and [BIP342](https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki).
-
-### Terminal Consignment - Consignment Endpoint
-
-A [transfer consignment](glossary.md#consignment) that includes the last state of a contract embedding the [State Transition](glossary.md#state-transition) constructed from a payee counterparty [invoice](glossary.md#invoice).
 
 ### Transition Bundle
 

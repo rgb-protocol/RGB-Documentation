@@ -55,6 +55,7 @@ The **New state** is represented by:
   * [Seal Definition](components-of-a-contract-operation.md#seal-definition).
   * [Owned State](components-of-a-contract-operation.md#owned-states).
 * [Global State](components-of-a-contract-operation.md#global-state), which can be either [mutated or added](components-of-a-contract-operation.md#state-update-methods-and-rules).
+* [Metadata](components-of-a-contract-operation.md#metadata), which are only available locally to the current operation.
 
 In addition, we also have several operation-specific fields:
 
@@ -68,7 +69,7 @@ In addition, we also have several operation-specific fields:
 
 Finally, through a custom hashing methodology, all of the fields in the Contract Operation are summarized into an `OpId` commitment that is placed in the [Transition Bundle](state-transitions.md#transition-bundle).
 
-We will cover each contract component in a dedicated subsection. The complete memory layout of each component of a contract operation is given [here](https://github.com/RGB-WG/rgb-core/blob/master/stl/Transition.vesper).
+We will cover each contract component in a dedicated subsection. The complete memory layout of each component of a contract operation is given [here](https://github.com/RGB-WG/rgb-core/blob/v0.11.1-alpha.2/stl/Transition.vesper).
 
 ## OpId
 
@@ -126,15 +127,13 @@ Each component of a Global State consists of a 2-field structure that includes:
 * A `GlobalType` which embeds a deterministic reference to the global propriety expressed in the [Schema](../rgb-contract-implementation/schema/).
 * The actual Data expressing the property.
 
-For example, the Global State of a newly issued [Non inflatable Asset](../rgb-contract-implementation/schema/non-inflatable-fungible-asset-schema.md), which is encoded in the Genesis, contains:
+For example, the Global State of a newly issued [Non Inflatable Asset](../rgb-contract-implementation/schema/non-inflatable-fungible-asset-schema.md), which is encoded in the Genesis, contains:
 
 * The `ticker`.
 * The full name of the token: `name`.
 * The precision of decimal digits: `precision`.
-* The known circulating supply of the token: `issuedSupply`.
-* The maximum supply of the token: `maxSupply`.
-* The date of issuance: `created`.
-* A text with some Legal disclaimer: `data`.
+* The issued supply of the token: `issuedSupply`.
+* A text with some legal disclaimer: `terms`.
 
 ### Assignments
 
@@ -175,6 +174,7 @@ Where:
 title: Components of the Seal Definition
 ---
 classDiagram
+    direction LR
     BlindSeal ..|> SecretSeal : conceal
     class BlindSeal {
       txptr: Txid | WitnessTx

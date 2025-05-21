@@ -2,9 +2,7 @@
 
 This section explores **how invoices are structured and operate within a particular** [contract](glossary.md#contract). The initial focus is on RGB identifiers, which are integral to the operation of the system and may be encountered by users in various forms. These identifiers are unique to each component of the system, including contracts and assets, ensuring a standardized method of identification throughout the system.
 
-## Identifiers and their encoding
-
-Each element within the system, be it a contract, schema or asset, is assigned a **unique identifier.** These identifiers are not arbitrary strings but are carefully encoded using base58, a method chosen for its efficiency and readability. Furthermore, these identifiers are prefixed with a descriptor (in the form of a URL or URN) indicating their type, such as <mark style="color:red;">`rgb:`</mark> . This prefixing strategy ensures clarity regarding the nature of each identifier, preventing confusion with other URLs and misuse.
+Each element within the system, be it a contract, schema or asset, is assigned a **unique identifier**. These identifiers are prefixed with a descriptor (in the form of a URL or URN) indicating their type, such as <mark style="color:red;">`rgb:`</mark>, which clarifies their nature.
 
 ## Enhancing Human Readability through Chunking
 
@@ -14,7 +12,7 @@ An identifier for an RGB contract could be represented, by the following <mark s
 
 <mark style="color:orange;">`2whK8s5O-b1LG4rR-OhXpDq1-SjyHvKx-OhTEFjQ-aba0V_o`</mark>
 
-which, as we said, is a string in _Base58_ divided into different chunks to make it easier to read. The last group of characters is a _checksum_ of the previous encoding. Finally, Base58 encoding was chosen in favor of [Bech32](https://en.bitcoin.it/wiki/Bech32) encoding which can have some limitations regarding readability and character size limits of the string.
+which, as we said, is a string divided into different chunks to make it easier to read.
 
 ## Use of URLs for Invoices
 
