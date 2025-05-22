@@ -1,5 +1,7 @@
 [default]
 extend-ignore-re = [
-    "[0-9A-Za-z]{7}-[0-9A-Za-z]{9}-[0-9A-Za-z]{9}-[0-9A-Za-z]{9}-[0-9A-Za-z]{9}-[0-9A-Za-z]{7}",  #rgb:
-    "[0-9A-Za-z]{7}-[0-9A-Za-z]{9}-[0-9A-Za-z]{9}-[0-9A-Za-z]{9}-[0-9A-Za-z]{9}-[0-9A-Za-z]{6}",  #+utxob:
+    # Match rgb-style encoded strings with underscores, tildes, dashes — 6 hyphen-separated segments
+    "[0-9A-Za-z_~]{7,}-[0-9A-Za-z_~]{7,}-[0-9A-Za-z_~]{7,}-[0-9A-Za-z_~]{7,}-[0-9A-Za-z_~]{7,}-[0-9A-Za-z_~]{7,}",
+    # Match utxob-like values (if needed)
+    "[0-9A-Za-z_~]{7,}(-[0-9A-Za-z_~]{7,}){5}",
 ]

@@ -26,13 +26,8 @@
 
 ## RGB Contract Implementation
 
-* [Contract Implementation in RGB](rgb-contract-implementation/schema-interface.md)
 * [Schema](rgb-contract-implementation/schema/README.md)
   * [Schema example: Non-Inflatable Assets](rgb-contract-implementation/schema/non-inflatable-fungible-asset-schema.md)
-* [Interface](rgb-contract-implementation/interface/README.md)
-  * [Standard Interfaces by LNP/BP Association](rgb-contract-implementation/interface/standard-interfaces-by-lnp-bp-association.md)
-  * [Interface example: RGB20](rgb-contract-implementation/interface/rgb20-interface-example.md)
-* [Interface Implementation](rgb-contract-implementation/interface-implementation.md)
 
 ## RGB over Lightning Network
 

@@ -52,8 +52,8 @@ The commitment is required to possess two fundamental security properties:
 
 The data transferred between parties that are subject to [client-side validation](glossary.md#client-side-validation). In RGB there are 2 types of consignment:
 
-* Contract Consignment: provided by the contract issuer including the information about the contract setup, such as the [Schema](glossary.md#schema), the [Genesis](glossary.md#genesis), the [Interface](glossary.md#interface), and the [Interface Implementation](glossary.md#interface-implementation).
-* Transfer Consignment: provided by the payer user party and containing all the state transition history up to the [terminal consignment](glossary.md#terminal-consignment-consignment-endpoint).
+* **Contract Consignment**: provided by the contract issuer, includes the information about the contract setup, such as the [Schema](glossary.md#schema) and the [Genesis](glossary.md#genesis).
+* **Transfer Consignment**: provided by the payer to the payee, contains all the state transition history from [Genesis](glossary.md#genesis) to the newly created unspent [Assignments](glossary.md#assignment).
 
 ### Contract
 
@@ -65,9 +65,8 @@ An update to the [contract state](glossary.md#contract-state) performed accordin
 
 Contract operations include:
 
-* [State Transition](glossary.md#state-transition)
 * [Genesis](glossary.md#genesis)
-* [State Extension](glossary.md#state-extension)
+* [State Transition](glossary.md#state-transition)
 
 ### Contract Participant
 
@@ -75,7 +74,6 @@ An actor who participates in contract operations. Contract parties are classifie
 
 * **Contract issuer**: an actor creating contract [Genesis](glossary.md#genesis).
 * **Contract party**: all actors who have some [ownership](glossary.md#ownership) rights over RGB [contract state](glossary.md#contract-state) which have been provided through an [Assignment](glossary.md#assignment).
-* **Public party**: an actor who is able to construct [State Extensions](glossary.md#state-extension). Can exist only in contracts providing [Valencies](glossary.md#valency) to be redeemed by State Extension.
 
 ### Contract Rights
 
@@ -83,7 +81,6 @@ RGB contract parties have different rights as a part of the contract conditions 
 
 * Ownership rights: the rights associated with the [ownership](glossary.md#ownership) of some UTXO referenced by a [Seal Definition](glossary.md#seal-definition).
 * Executive rights: the ability to construct the [contract state](glossary.md#contract-state) in a final form, i.e. to construct a valid [state transition](glossary.md#state-transition) satisfying [schema](glossary.md#schema) validation rules.
-* Public rights: a right under some Schema to use a contract [Valency](glossary.md#valency) and construct a valid [State Extension](glossary.md#state-extension).
 
 ### Contract State
 
@@ -105,10 +102,6 @@ A directed graph that does not contain any directed cycle thus allowing topologi
 
 [Wikipedia link](https://en.wikipedia.org/wiki/Directed\_acyclic\_graph)
 
-### Engraving
-
-An optional data string that past owners of a contract can register in the contract history. It is implemented in the RGB21 [interface](glossary.md#interface).
-
 ### Extra Transaction Proof - ETP
 
 The part of the [Anchor](../commitment-layer/anchors.md) that embeds the additional data necessary for the validation of [Tapret](../commitment-layer/deterministic-bitcoin-commitments-dbc/tapret.md) commitment contained in a [taproot](glossary.md#taproot) transaction, such as the internal PubKey and the Script Path Spend.
@@ -118,16 +111,6 @@ The part of the [Anchor](../commitment-layer/anchors.md) that embeds the additio
 The set of data, regulated by a contract [schema](glossary.md#schema), which represents the starting state of every contract of RGB. It's the equivalent of Bitcoin Genesis Block at the client-side level.
 
 [Link](../rgb-state-and-operations/state-transitions.md#genesis)
-
-### Interface
-
-The set of code instructions that allow for the parsing of the compiled binary data contained in [Schema](glossary.md#schema), [Contract Operation](glossary.md#contract-operation), and [States](glossary.md#contract-state) in user and wallet-readable information.
-
-[Link](../rgb-contract-implementation/interface/)
-
-### Interface Implementation
-
-The set of code declarations that bind an [Interface](glossary.md#interface) to a [Schema](glossary.md#schema) and make possible the semantic translation operated by the Interface itself.
 
 ### Invoice
 
@@ -167,20 +150,6 @@ A transaction which lacks some element of its signature and which can be complet
 
 [Link](https://github.com/bitcoin/bips/blob/master/bip-0174.mediawiki)
 
-### Pedersen commitment
-
-A particular type of cryptographic [commitment](glossary.md#commitment) characterized by the [homomorphic](https://en.wikipedia.org/wiki/Homomorphism) property with respect to the addition operation. This means that given a certain $$\text{commit}$$ function, it is possible to verify the commitment given by the sum of two data without revealing the data itself. That is, given $$m_1$$, $$m_2$$, $$r_1$$, and $$r_2$$, if $$C_1 = \text{commit}(m_1,r_1)$$ and $$C_2 = \text{commit}(m_2,r_2)$$:
-
-$$C_3 = C_1 \cdot C_2 = \text{commit}(m_1+m_2,r_1 + r_2)$$
-
-So it is possible to verify the total sum without revealing the individual values. This operation, for example, becomes useful to conceal the amounts of tokens transacted.
-
-[Article Link](https://link.springer.com/chapter/10.1007/3-540-46766-1\_9)
-
-### Redeem
-
-A construct present in [State Extension](glossary.md#state-extension) which references a previously-declared [Valency](glossary.md#valency).
-
 ### Schema
 
 A declarative piece of code that contains the set of variables, rules, and [business logic](glossary.md#business-logic) according to which an RGB contract works.
@@ -207,12 +176,6 @@ A promise to [commit](glossary.md#commitment) to a yet unknown message in the fu
 
 The set of client-side data related to one or more [contracts](glossary.md#contract) that undergo [validation](glossary.md#client-side-validation) and are stored by the users.
 
-### State Extension
-
-A contract operation that allows for the redeeming of some [Valencies](glossary.md#valency). It needs to be closed by a [State Transition](glossary.md#state-transition) in order to put in effect the changes to the contract expressed by the Valencies.
-
-[Link](../rgb-state-and-operations/state-transitions.md#state-extensions)
-
 ### State Transition
 
 The most important [contract operation](glossary.md#contract-operation) that makes possible the transition of an RGB State to a New State, changing [state](glossary.md#contract-state) data and/or ownership.
@@ -223,10 +186,6 @@ The most important [contract operation](glossary.md#contract-operation) that mak
 
 The Bitcoin's Segwit v1 transaction format detailed in [BIP341](https://github.com/bitcoin/bips/blob/master/bip-0341.mediawiki) and [BIP342](https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki).
 
-### Terminal Consignment - Consignment Endpoint
-
-A [transfer consignment](glossary.md#consignment) that includes the last state of a contract embedding the [State Transition](glossary.md#state-transition) constructed from a payee counterparty [invoice](glossary.md#invoice).
-
 ### Transition Bundle
 
 A set of RGB [State Transitions](glossary.md#state-transition) that belong to the same contract and that are committed in the same [witness transaction](glossary.md#witness-transaction).
@@ -236,12 +195,6 @@ A set of RGB [State Transitions](glossary.md#state-transition) that belong to th
 ### UTXO
 
 A Bitcoin Unspent Transaction Output. It is defined by a transaction hash and a _vout_ index which, collectively, constitute an [outpoint](https://en.bitcoin.it/wiki/Protocol\_documentation#tx).
-
-### Valency
-
-A public right having no state but which can be referenced and redeemed through a state extension.
-
-[Link](../rgb-state-and-operations/components-of-a-contract-operation.md#valencies)
 
 ### Witness Transaction
 
