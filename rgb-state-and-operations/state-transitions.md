@@ -43,12 +43,12 @@ As mentioned [earlier](intro-smart-contract-states.md#introduction-to-states), a
 
 ![A detailed view of a State Transition bundle, where two seal belonging to the same contract are closed by the same witness transaction. The diagram separates the RGB specific part from the Bitcoin Commitment Layer part, referencing the related libraries.](../.gitbook/assets/state-transition-3-bitcoin-rgb.png)
 
-As an interesting scalability feature of RGB, multiple **State Transitions** can be aggregated in a **Transaction Bundle**, so that **each bundling operation** fits one and only one contract leaf in the [MPC](../annexes/glossary.md#multi-protocol-commitment-mpc) tree:
+As an interesting scalability feature of RGB, multiple **State Transitions** can be aggregated in a **Transition Bundle**, so that **each bundling operation** fits one and only one contract leaf in the [MPC](../annexes/glossary.md#multi-protocol-commitment-mpc) tree:
 
 * A [Transition Bundle](state-transitions.md#transition-bundle) collects all transitions that refer to a given contract.
-* The Transaction Bundle is hashed to produce its [BundleId](state-transitions.md#bundleid), which is included as a leaf in the [MPC](../annexes/glossary.md#multi-protocol-commitment-mpc) Tree at a position that is biunivocally determined by its contract_id.
-* When all bundles are included in the tree, the empty leaves are filled with random data and its merkle root is computed. The MPC commitment, composed by the merkle root and parameters used in the tree construction, is finally included into a Tapret or Opret output thanks to [DBC](../annexes/glossary.md#deterministic-bitcoin-commitment-dbc), so that the bitcoin transaction unequivocally commits to a set of rgb state transition.
-* The [Anchor](../commitment-layer/anchors.md) represents the _connection point_ between Bitcoin Blockchain and the RGB client-side validation structure.
+* The Transition Bundle is hashed to produce its [BundleId](state-transitions.md#bundleid), which is included in a leaf of the [MPC](../annexes/glossary.md#multi-protocol-commitment-mpc) Tree at a position that is determined by its contract ID.
+* When all bundles are included in the tree, the empty leaves are filled with random data and its merkle root is computed. The MPC commitment, composed by the merkle root and parameters used in the tree construction, is finally included into a Tapret or Opret output thanks to [DBC](../annexes/glossary.md#deterministic-bitcoin-commitment-dbc), so that the bitcoin transaction unequivocally commits to a set of RGB state transitions.
+* The [Anchor](../commitment-layer/anchors.md) represents the _connection point_ between the Bitcoin Blockchain and the RGB client-side validation structure.
 
 In the following paragraphs, we will delve into all the elements and processes involved in the State Transition operation. All topics discussed from now on belong to RGB Consensus, which is encoded in the [RGB Core Library](../annexes/rgb-library-map.md#rgb-core).
 
@@ -56,7 +56,7 @@ In the following paragraphs, we will delve into all the elements and processes i
 
 A transition bundle is essentially the collection of all state transitions in a given witness transaction that operate on a certain contract. **In the simplest case, such as the one shown above between Alice and Bob, a Transition Bundle consists of a single state transition**.
 
-However, RGB natively supports batching operations, so that one or more payers can send assets to one or more payes and multiple transition types and state types are involved (e.g: atomically sending tokens and inflation rights). In these cases, all the operations involving a certain contract would belong to the same position in the MPC tree, so they need to be deterministically bundled in order to fit in a single MPC leaf. The corresponding [witness transaction](../annexes/glossary.md#witness-transaction) then needs to close all the seals that are spent by each state transition.
+However, RGB natively supports batching operations, so that one or more payers can send assets to one or more payees and multiple transition types and state types are involved (e.g. atomically sending tokens and inflation rights). In these cases, all the operations involving a certain contract would belong to the same position in the MPC tree, so they need to be deterministically bundled in order to fit in a single MPC leaf. The corresponding [witness transaction](../annexes/glossary.md#witness-transaction) then needs to close all the seals that are spent by each state transition.
 
 ### BundleId
 
@@ -73,7 +73,7 @@ The `InputMap` associates `N` inputs of the witness transaction (by their vin) t
 ```
 InputMap =
 
-     N        input_0      K_0      OpId_0(input_0)   OpId_1(input_0)        input_0     K_1      OpId_0(input_1)   OpId_1(input_1)
+     N        input_0      K_0      OpId_0(input_0)   OpId_1(input_0)        input_1     K_1      OpId_0(input_1)   OpId_1(input_1)
             |_________||_________||________________||________________| ... |_________||_________||________________||________________| ...
              32-bit LE  16-bit LE     32-byte hash      32-byte hash        32-bit LE 16-bit LE     32-byte hash      32-byte hash
 |__________||_____________________________________________________________||______________________________________________________________|  ...
@@ -82,17 +82,17 @@ InputMap =
 
 Where:
 
-* `N` in the total number of inputs of the **witness transaction** that refer to some `OpId`s.
+* `N` is the total number of inputs of the **witness transaction** that refer to some `OpId`s.
 * `OpId_i(input_j)` is the Operation Identifier of the `i`-th State Transition that spends some state associated with the `j`-th input of the witness transaction.
 
 **Note:** In general, there is a many-to-many relationship between witness transaction
-inputs and the transitions. This allow for instance to:
+inputs and the transitions. This for instance allows to:
 - use allocations from two different UTXOs as inputs to the same state transition, e.g.:
-    - Alice owns 10 assets on UTXO_1, 5 on UTXO_2 and wants to send 12 assets to Bob
+    - Alice owns 10 assets on `utxo_1` plus 5 assets on `utxo_2` and wants to send 12 assets to Bob
     - The input map will look like: `{utxo_1: {opid_1}, utxo_2: {opid_1}}`
 - use different transitions to move more than one allocation on a given UTXO
-    - Alice owns both assets and a reissuance right on UTXO_1 and wants to spend it without burning anything
-    - The input map will look like: `{utxo_1: {opid_1, opid_1}}`
+    - Alice owns both assets and an inflation right on `utxo_1` and wants to spend it without burning anything
+    - The input map will look like: `{utxo_1: {opid_1, opid_2}}`
 
 To prevent double spends, client-side validation thus needs to check that every allocation only appears **once** in state transition inputs.
 
@@ -100,7 +100,7 @@ To prevent double spends, client-side validation thus needs to check that every 
 
 State transitions, just covered in the previous sections, allow the transfer of ownership of certain state properties from one party to another. However, state transitions are only one of the [Contract Operations](../annexes/glossary.md#contract-operation) allowed in RGB. The other one, which allows to generate new state at the issuance of a contract, is called **Genesis**.
 
-The following figure shows all three contract operations along with their position in a DAG related to an RGB contract, linked to their respective anchors in the Bitcoin Blockchain. State Transitions are represented by the red blocks.
+The following figure shows the three components of contract operations along with their position in the RGB contract DAG, linked to their respective anchors in the Bitcoin Blockchain. State Transitions are represented by the red blocks.
 ```mermaid
 block-beta
   columns 7
@@ -242,7 +242,7 @@ To give an example, in the case of a contract defining the creation of a token, 
 
 * The number of tokens issued and their owner(s) (the owner(s) of the UTXO referred to in the seal definition's genesis).
 * The maximum number of tokens to be issued in total.
-* The possibility of re-issuance and the designed party that possesses this right.
+* The possibility of inflation and the designed party that possesses this right.
 
 As a natural implication, **Genesis does not refer to any previous state transition**, nor does it close any previously defined seal. As mentioned above, to be effectively validated in the history of the chain, a Genesis must be referenced by a first state transition (e.g. an auto-spend to the issuer or a first round of distribution), which finalizes the "first ownership" of the contract through a commitment to the Bitcoin Blockchain.
 
