@@ -45,7 +45,7 @@ As mentioned [earlier](intro-smart-contract-states.md#introduction-to-states), a
 
 As an interesting scalability feature of RGB, multiple **State Transitions** can be aggregated in a **Transition Bundle**, so that **each bundling operation** fits one and only one contract leaf in the [MPC](../annexes/glossary.md#multi-protocol-commitment-mpc) tree:
 
-* A [Transition Bundle](state-transitions.md#transition-bundle) collects all transitions that refer to a given contract. State Transition details may be selectively revealed to different recipients, while the `InputMap` structure we will describe later ensures that allocations can be spent only once.
+* A [Transition Bundle](state-transitions.md#transition-bundle) collects all transitions that refer to a given contract. State Transition details may be selectively revealed to different recipients, while the input map structure we will describe later ensures that allocations can be spent only once.
 * The Transition Bundle is hashed to produce its [BundleId](state-transitions.md#bundleid), which is included in a leaf of the [MPC](../annexes/glossary.md#multi-protocol-commitment-mpc) Tree at a position that is determined by its contract ID.
 * When all bundles are included in the tree, the empty leaves are filled with random data and its merkle root is computed. The MPC commitment, composed by the merkle root and parameters used in the tree construction, is finally included into a Tapret or Opret output thanks to [DBC](../annexes/glossary.md#deterministic-bitcoin-commitment-dbc), so that the bitcoin transaction unequivocally commits to a set of RGB state transitions.
 * The [Anchor](../commitment-layer/anchors.md) represents the _connection point_ between the Bitcoin Blockchain and the RGB client-side validation structure.
@@ -58,20 +58,41 @@ A transition bundle is essentially the collection of all state transitions in a 
 
 However, RGB natively supports batching operations, so that one or more payers can send assets to one or more payees and multiple transition types and state types are involved (e.g. atomically sending tokens and inflation rights). In these cases, all the operations involving a certain contract would belong to the same position in the MPC tree, so they need to be deterministically bundled in order to fit in a single MPC leaf. The corresponding [witness transaction](../annexes/glossary.md#witness-transaction) then needs to close all the seals that are spent by each state transition.
 
+A Transition Bundle contains:
+* `input_map`, which maps all the [Assignments](../annexes/glossary.md#assignment) being spent to the State Transition spending each of them; it contains all the information that needs to be committed onchain
+* `known_transitions`, a subset of all transitions in the bundle whose details are explicitly provided; the remaining ones are said to be *concealed*
+
+```
+TransitionBundle {
+    input_map: Map<Opout, OpId>,
+    known_transitions: Vec<KnownTransition>,
+}
+```
+Assignments are identified by the `Opout` structure, which contains:
+* the Identifier of the Operation that created this Assignment
+* assignment Type, distinguishing for instance token ownership from issuance Rights
+* assignment Number, the index of this assignment within the previous operation, akin to bitcoin's `vout`
+```
+Opout {
+    op: OpId,
+    ty: AssignmentType,
+    no: u16,
+}
+```
 ### BundleId
 
-From a more technical angle, the `BundleId` to be inserted in the leaf of the [MPC](state-transitions.md) is [obtained](https://github.com/RGB-WG/rgb-core/blob/vesper/doc/Commitments.md#bundle-id) from a tagged hash of the strict serialization of the `InputMap` field of the bundle in the following way:
+From a more technical angle, the `BundleId` to be inserted in the leaf of the [MPC](state-transitions.md) is [obtained](https://github.com/RGB-WG/rgb-core/blob/vesper/doc/Commitments.md#bundle-id) from a tagged hash of the strict serialization of the `input_map` field of the bundle in the following way:
 
-`BundleId = SHA-256(SHA-256(bundle_tag) || SHA-256(bundle_tag) || InputMap)`
+`BundleId = SHA-256( SHA-256(bundle_tag) || SHA-256(bundle_tag) || input_map )`
 
 Where:
 
 * `bundle_tag = urn:lnp-bp:rgb:bundle#2024-02-03`
 
-The `InputMap` associates `N` RGB allocations (by their `opout`) to the transition spending each of them and it gets serialized in the following way:
+The input map gets serialized in the following way:
 
 ```
-InputMap =
+input_map =
 
      N                    Opout_1                       OpId_1                     Opout_N                       OpId_N
 |__________||_____________________________________||____________| ... |_____________________________________||____________|
@@ -83,20 +104,15 @@ InputMap =
 Where:
 
 * `N` is the total number of opouts spent by some transition in the current bundle.
-* `Opout` identifies an allocation being spent by some transition in the current bundle,
-    acting as an RGB equivalent for bitcoin `UTXO`. It contains:
-    * 32-byte ID of the operation that created the allocation
+* `Opout_i` is the `i`-th spent Assignment, which contains:
+    * 32-byte previous operation ID
     * 16-bit assignment type, e.g. 4000 for nia assets
-    * 16-bit assignment number, i.e. the index within the assignments sequence of the
-        previous operation, akin to bitcoin `vout`
-* `OpId_i` is the Operation Identifier of the State Transition which spends the `i`-th Opout
+    * 16-bit assignment number
+* `OpId_i` is the Operation Identifier of the State Transition which spends the `i`-th
+    Assignment
 * `Opouts` are sorted lexicographically to obtain a deterministic `BundleId`
 
-**Note:** This structure guarantees the absence of double spends, since there can be only
-a single State Transition spending each allocation. As a consequence, some State
-Transition may be omitted (concealed) from the Bundle for privacy reasons, while their
-OpId inside the input map ensures that no other (possibly concealed) transition spends the
-same Opout(s).
+**Note:** A given `OpId` may appear multiple times if a transition spends multiple assignments, but the opposite is not true. An `Opout` can only be spent by a single State Transition, which guarantees the absence of double spends if we consider that the corresponding seal is closed by the witness transaction. As a consequence, some State Transition may be omitted (concealed) from the Bundle for privacy reasons, while their OpId inside the input map ensures that no other (possibly concealed) transition can spend the same Opout(s).
 
 ## State Generation and Active State
 
