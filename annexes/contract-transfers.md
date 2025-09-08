@@ -1,6 +1,6 @@
 # Contract Transfers
 
-contractsIn this section we will be guided through a step-by-step RGB Contract Transfer operation, again with the cooperation of our cryptographic couple: Alice and Bob. We will also provide some coding sections of both our characters, which use the `rgb` Command Line Interface Tool which can be installed from the dedicated [RGB library](rgb-library-map.md#rgb-cli).
+In this section we will be guided through a step-by-step RGB Contract Transfer operation, again with the cooperation of our cryptographic couple: Alice and Bob. We will also provide some coding sections of both our characters, which use the `rgb` Command Line Interface Tool which can be installed from the dedicated [RGB library](rgb-library-map.md#rgb-cli).
 
 Let's start with Bob, who owns a Bitcoin wallet but has not yet started using RGB technology.
 
