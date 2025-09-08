@@ -17,7 +17,7 @@ Set of client-side data that proves the inclusion of a unique [commitment](gloss
 
 Acronym of Algorithmic logic unit Virtual Machine, it is a register-based virtual machine for smart contract validation and distributed computing, used but not limited to RGB contract validation.
 
-[Link](https://www.aluvm.org/)
+[Link](./rgb-library-map.md#aluvm).
 
 ### Assignment
 
@@ -181,6 +181,14 @@ The set of client-side data related to one or more [contracts](glossary.md#contr
 The most important [contract operation](glossary.md#contract-operation) that makes possible the transition of an RGB State to a New State, changing [state](glossary.md#contract-state) data and/or ownership.
 
 [Link](../rgb-state-and-operations/state-transitions.md#state-transitions-and-their-mechanics)
+
+### Strict Type System
+
+An infrastructure that allows to create complex types which are deterministically
+identified by their `semId`. It is used by schemas to precisely define the data type
+for their state.
+
+[Link](./rgb-library-map.md#strict-types).
 
 ### Taproot
 

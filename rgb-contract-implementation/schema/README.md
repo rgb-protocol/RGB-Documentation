@@ -25,7 +25,7 @@ From a functional point of view, the **Schema construct addresses the following 
 Among the most important properties, a Schema:
 
 * Defines all the variables used in contract state and transitions using a specific
-  [strict type system](https://www.strict-types.org/) encoding. Such variables,
+  [strict type system](../../annexes/glossary.md#strict-type-system) encoding. Such variables,
   depending on their scope, may be of different types:
   * Metadata: related to a single operation
   * Owned state: created by an operation and consumed by a second one

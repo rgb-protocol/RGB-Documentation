@@ -1,121 +1,77 @@
 # RGB Library Map
 
-<figure><img src="../.gitbook/assets/library_map.png" alt=""><figcaption><p><strong>The different code parts making up RGB Protocol and dependent libraries.</strong></p></figcaption></figure>
-
-## Client-side Validation
+## RGB Consensus
 
 **Repository:**
 
-* [https://github.com/LNP-BP/client\_side\_validation](https://github.com/LNP-BP/client\_side\_validation)
+* [https://github.com/rgb-protocol/rgb-consensus](https://github.com/rgb-protocol/rgb-consensus)
+
+**Rust Crate:**
+
+* [https://crates.io/crates/rgb-consensus](https://crates.io/crates/rgb-consensus)
+
+## RGB Operations
+
+**Repository:**
+
+* [https://github.com/rgb-protocol/rgb-ops](https://github.com/rgb-protocol/rgb-ops)
+
+**Rust Crate:**
+
+* [https://crates.io/crates/rgb-ops](https://crates.io/crates/rgb-ops)
+* [https://crates.io/crates/rgb-invoicing](https://crates.io/crates/rgb-invoicing)
+
+## RGB API and CLI
+
+**Repository:**
+
+* [https://github.com/rgb-protocol/rgb-api](https://github.com/rgb-protocol/rgb-api)
 
 **Rust Crates:**
 
-* [https://crates.io/crates/client\_side\_validation](https://crates.io/crates/client\_side\_validation)
-* [https://crates.io/crates/single\_use\_seals](https://crates.io/crates/single\_use\_seals)
+* [https://crates.io/crates/rgb-api](https://crates.io/crates/rgb-api)
+* [https://crates.io/crates/rgb-psbt-utils](https://crates.io/crates/rgb-psbt-utils)
+* [https://crates.io/crates/rgb-cmd](https://crates.io/crates/rgb-cmd)
 
-## Deterministic Bitcoin Commitments - DBC
+## RGB Schemas
 
 **Repository:**
 
-* [https://github.com/BP-WG/bp-core](https://github.com/BP-WG/bp-core)
+* [https://github.com/rgb-protocol/rgb-schemas/](https://github.com/rgb-protocol/rgb-schemas/)
 
 **Rust Crate:**
 
-* [https://crates.io/crates/bp-dbc](https://crates.io/crates/bp-dbc)
-
-## Multi Protocol Commitment - MPC
-
-**Repository:**
-
-* [https://github.com/LNP-BP/client\_side\_validation](https://github.com/LNP-BP/client\_side\_validation)
-
-**Rust Crate:**
-
-* [https://crates.io/crates/commit\_verify](https://crates.io/crates/commit\_verify)
-
-## Strict Types & Strict Encoding
-
-**Specifications:**
-
-* [https://www.strict-types.org/](https://www.strict-types.org/)
-
-**Repositories:**
-
-* [https://github.com/strict-types/strict-types](https://github.com/strict-types/strict-types)
-* [https://github.com/strict-types/strict-encoding](https://github.com/strict-types/strict-encoding)
-
-**Rust Crates:**
-
-* [https://crates.io/crates/strict\_types](https://crates.io/crates/strict\_types)
-* [https://crates.io/crates/strict\_encoding](https://crates.io/crates/strict\_encoding)
-
-## RGB Core
-
-**Repository:**
-
-* [https://github.com/RGB-WG/rgb-core](https://github.com/RGB-WG/rgb-core)
-
-**Rust Crate:**
-
-* [https://crates.io/crates/rgb-core](https://crates.io/crates/rgb-core)
-
-## RGB Standard Library & Wallet
-
-**Repository:**
-
-* [https://github.com/RGB-WG/rgb-std](https://github.com/RGB-WG/rgb-std)
-
-**Rust Crate:**
-
-* [https://crates.io/crates/rgb-std](https://crates.io/crates/rgb-std)
-
-## RGB CLI
-
-**Repository:**
-
-* [https://github.com/RGB-WG/rgb](https://github.com/RGB-WG/rgb)
-
-**Rust Crates:**
-
-* [https://crates.io/crates/rgb-cli](https://crates.io/crates/rgb-cli)
-* [https://crates.io/crates/rgb-wallet](https://crates.io/crates/rgb-wallet)
-
-## RGB Schemata
-
-**Repository:**
-
-* [https://github.com/RGB-WG/rgb-schemata/](https://github.com/RGB-WG/rgb-schemata/)
+* [https://crates.io/crates/rgb-schemas](https://crates.io/crates/rgb-schemas)
 
 ## ALuVM
 
-**Info:**
+**Repository:**
 
-* [https://www.aluvm.org/](https://www.aluvm.org/)
+* [https://github.com/rgb-protocol/rgb-aluvm](https://github.com/rgb-protocol/rgb-aluvm)
+
+**Rust Crate:**
+
+* [https://crates.io/crates/rgb-aluvm](https://crates.io/crates/rgb-aluvm)
+
+## Strict Types
 
 **Repositories:**
 
-* [https://github.com/AluVM/aluvm-spec](https://github.com/AluVM/aluvm-spec)
-* [https://github.com/AluVM/alure](https://github.com/AluVM/alure)
+* [https://github.com/rgb-protocol/rgb-strict-types](https://github.com/rgb-protocol/rgb-strict-types)
+* [https://github.com/rgb-protocol/rgb-strict-encoding](https://github.com/rgb-protocol/rgb-strict-encoding)
 
 **Rust Crates:**
 
-* [https://crates.io/crates/aluvm](https://crates.io/crates/aluvm)
-* [https://crates.io/crates/aluasm](https://crates.io/crates/aluasm)
+* [https://crates.io/crates/rgb-strict-types](https://crates.io/crates/rgb-strict-types)
+* [https://crates.io/crates/rgb-strict-encoding](https://crates.io/crates/rgb-strict-encoding)
+* [https://crates.io/crates/rgb-strict-encoding-derive](https://crates.io/crates/rgb-strict-encoding-derive)
 
-## Bitcoin Protocol - BP
-
-**Repositories:**
-
-* [https://github.com/BP-WG](https://github.com/BP-WG)
-  * [https://github.com/BP-WG/bp-core](https://github.com/BP-WG/bp-core)
-  * [https://github.com/BP-WG/bp-std](https://github.com/BP-WG/bp-std)
-  * [https://github.com/BP-WG/bp-wallet](https://github.com/BP-WG/bp-wallet)
-
-## Ubiquitous Deterministic Computing - UBIDECO
+## Ascii Armor
 
 **Repository:**
 
-* [https://github.com/UBIDECO](https://github.com/UBIDECO)
+* [https://github.com/rgb-protocol/rgb-ascii-armor](https://github.com/rgb-protocol/rgb-ascii-armor)
 
+**Rust Crate:**
 
-
+* [https://crates.io/crates/rgb-ascii-armor](https://crates.io/crates/rgb-ascii-armor)
