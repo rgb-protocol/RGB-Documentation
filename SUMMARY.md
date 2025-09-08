@@ -39,3 +39,4 @@
 * [Contract Transfers](annexes/contract-transfers.md)
 * [Invoices](annexes/invoices.md)
 * [RGB Library Map](annexes/rgb-library-map.md)
+* [Bitcoin Single-use Seals](annexes/single-use-seals-bitcoin.md)
