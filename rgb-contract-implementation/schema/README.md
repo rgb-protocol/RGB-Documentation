@@ -24,17 +24,17 @@ From a functional point of view, the **Schema construct addresses the following 
 
 Among the most important properties, a Schema:
 
-* References an optional Root `SchemaId` from which a basic and customizable structure layout is derived.
-* Defines all the variable used in contract state and transition using a specific [strict type system](https://www.strict-types.org/) encoding. Of particular importance inside the Schema are specified the `Types` related to:
-  * Metadata.
-  * Owned state.
-  * Global state.
-  * Contract Operation.
-* Defines all the data structure required for Genesis operation, which marks the first instantiation of the contract.
-* Allows for **programmed updates to the contract without** having to modify the infrastructure software, so that wallets and explorers can accept modified asset types without making any changes to their respective code.
-* Embeds the **state validation script** and the related functions for the client-side part of RGB. The scripts are executed through the [AluVM](../../annexes/glossary.md#aluvm) engine which represent the most fundamental parts of the execution and validation of the business logic.
+* Defines all the variables used in contract state and transitions using a specific [strict type system](https://www.strict-types.org/) encoding. Such variables, depending on their scope, may be of different types:
+  * Metadata: related to a single operation
+  * Owned state: created by an operation and consumed by a second one
+  * Global state: created by an operation, of which it shares the visibility
+* Defines all the data structure required for Genesis operation, which represents the first instantiation of the contract.
+* Defines a list of supported contract Transitions; for each of them:
+  * Describes what data types it works with: owned state in input/output and global state/metadata it
+      optionally defines
+  * Embeds the **state validation script** and the related functions for the client-side part of RGB. The scripts are executed through the [AluVM](../../annexes/glossary.md#aluvm) engine which represent the most fundamental parts of the execution and validation of the business logic.
 
-**Even this architectural choice regarding Schema appears to be very different from blockchain-based contracts**, for example, those implemented on Ethereum. Indeed in these latter systems, **the contract itself is provided as an executable code** that implements the rules for changing and implementing the state which is eventually directly stored into the blockchain. **In contrast, in RGB the contract is encoded in a purely declarative way.**
+**Schema's architecture appears to be very different from blockchain-based contracts**, for example those implemented on Ethereum. Indeed, in these systems **the contract itself is provided as an executable code** that implements the rules for changing and implementing the state which is eventually directly stored into the blockchain. **In contrast, in RGB the contract is encoded in a purely declarative way.**
 
 In every Contract Operation performed in the client-side validation phase, the Contract Schema is always referenced and checked against. In particular, after compilation, the Schema can provide all the necessary data structure to perform the issuance of the contract represented by the Genesis Operation.
 
