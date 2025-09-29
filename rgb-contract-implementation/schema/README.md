@@ -24,17 +24,20 @@ From a functional point of view, the **Schema construct addresses the following 
 
 Among the most important properties, a Schema:
 
-* Defines all the variables used in contract state and transitions using a specific [strict type system](https://www.strict-types.org/) encoding. Such variables, depending on their scope, may be of different types:
+* Defines all the variables used in contract state and transitions using a specific
+  [strict type system](https://www.strict-types.org/) encoding. Such variables,
+  depending on their scope, may be of different types:
   * Metadata: related to a single operation
   * Owned state: created by an operation and consumed by a second one
-  * Global state: created by an operation, of which it shares the visibility
-* Defines all the data structure required for Genesis operation, which represents the first instantiation of the contract.
+  * Global state: created by an operation, which it shares the visibility of
+* Defines all the data structures required for Genesis operation, which represents the first instantiation of the contract.
 * Defines a list of supported contract Transitions; for each of them:
-  * Describes what data types it works with: owned state in input/output and global state/metadata it
-      optionally defines
-  * Embeds the **state validation script** and the related functions for the client-side part of RGB. The scripts are executed through the [AluVM](../../annexes/glossary.md#aluvm) engine which represent the most fundamental parts of the execution and validation of the business logic.
+  * Describes what data types it works with: owned state in input/output and global state/metadata it optionally defines
+  * Embeds the **state validation script** and the related functions for the client-side part of RGB.
+  The scripts, which executed through the [AluVM](../../annexes/glossary.md#aluvm) engine,
+  represent the most fundamental component of the business logic.
 
-**Schema's architecture appears to be very different from blockchain-based contracts**, for example those implemented on Ethereum. Indeed, in these systems **the contract itself is provided as an executable code** that implements the rules for changing and implementing the state which is eventually directly stored into the blockchain. **In contrast, in RGB the contract is encoded in a purely declarative way.**
+**Schema architecture appears to be very different from blockchain-based contracts**, for example those implemented on Ethereum. Indeed, in these systems **the contract itself is provided as executable code** that defines the rules for changing and implementing the state which is eventually directly stored into the blockchain. **In contrast, in RGB the contract is encoded in a purely declarative way.**
 
 In every Contract Operation performed in the client-side validation phase, the Contract Schema is always referenced and checked against. In particular, after compilation, the Schema can provide all the necessary data structure to perform the issuance of the contract represented by the Genesis Operation.
 
@@ -44,4 +47,4 @@ After compilation, the Schema is encoded in a `.rgb` binary file or in an `.rgba
 
 An issuer will then create a particular instance of a schema by filling it in with data such as `precision`, `name` and `issuedSupply`. Initial allocations are also defined, and the resulting structure is encoded into a consignment file and shared with the new owners. Once the first state transition happens, the contract will (indirectly) be committed onchain and take full effect.
 
-In the next subsection, we will provide an example of an actual Schema used for the issuance of a **Non Inflatable Fungible Asset.**
+In the next chapter, we provide a list of currently supported schemas.

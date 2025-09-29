@@ -27,6 +27,7 @@
 ## RGB Contract Implementation
 
 * [Schema](rgb-contract-implementation/schema/README.md)
+  * [Supported schemas](rgb-contract-implementation/schema/supported-schemas.md)
   * [Schema example: Non-Inflatable Assets](rgb-contract-implementation/schema/non-inflatable-fungible-asset-schema.md)
 
 ## RGB over Lightning Network
