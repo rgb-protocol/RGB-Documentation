@@ -87,10 +87,10 @@ To move on to the construction of this more complex case, we show below the stru
                         |      |                    |
                  +------+      +------+             |
                  |                    |             |
-           +-----+------+       +-----+------+      | 
+           +-----+------+       +-----+------+      |
            | tH_LEAF(A) |       | tH_LEAF(B) |      |
            +-----^------+       +-----^------+      |
-                 |                    |             | 
+                 |                    |             |
                +-+-+                +-+-+         +-+-+
                | A |                | B |         | C |
                +---+                +---+         +---+
@@ -147,7 +147,7 @@ The new Taproot Output Key `Q` including the Tapret commitment is built as follo
 
 **2)** According to Taproot rules, **every branch and leaf hashing operation is performed in lexicographic order of the two operands**.&#x20;
 
-Therefore, **two cases** that lead to two different proofs of uniqueness of the commitment can occur.
+Therefore, **three cases** that lead to two different proofs of uniqueness of the commitment can occur.
 
 **a)** If the hash of the Tapret commitment (`tHT`) **is greater** than the top-level hash of the Script Path Spend (`tHABC`), it will be put on **the right side of the Script Tree**. In this case, the commitment at this position is considered as a valid proof of uniqueness. The related Merkle Proof of inclusion and uniqueness consists of `tHABC` and `P` only, as shown in the diagram below.
 
@@ -174,10 +174,12 @@ Therefore, **two cases** that lead to two different proofs of uniqueness of the 
           +------------------------+               +--------------------------------------+
 </code></pre>
 
-**b)** If the hash of the tapret commitment (`tHT`) **is smaller** than the top-level hash of the Script Path Spend (`tHABC`), it will be placed on **the left side of the Script Tree**. In this case, it is necessary to show that there are no other Tapret commitments on the right side of the Tree. To do this, `tHAB` and `tHC` must be revealed and form the Merkle proof of inclusion and uniqueness along with `P`, as shown in the diagram below:
+**b)** If the hash of the tapret commitment (`tHT`) **is smaller** than the top-level hash of the Script Path Spend (`tHABC`), it will be placed on **the left side of the Script Tree**. In this case, it is necessary to show that there are no other Tapret commitments on the right side of the Tree. To do this, two cases must be taken into account:
+
+**b1)** If the old root is a merkle node with two branches, `tHAB` and `tHC` must be revealed and form the Merkle proof of inclusion and uniqueness along with `P`, as shown in the diagram below:
 
 ```
-* tHABC > tHT case
+* tHABC > tHT case (branch)
 
 +---+            +---+   +---+   +---+
 | Q |      =     | P | + | t | * | G |
@@ -190,7 +192,7 @@ Therefore, **two cases** that lead to two different proofs of uniqueness of the 
                                 +---------------------^------+
                                                       |
                                        +--------------+----------+
-                                       | tH_BRANCH( tHT || tHABC)|   
+                                       | tH_BRANCH( tHT || tHABC)|
                                        +-------------^-------^---+
                                                      |       |
                                   +------------------+       +------------------+
@@ -205,9 +207,51 @@ Therefore, **two cases** that lead to two different proofs of uniqueness of the 
                                                       | tH_BRANCH(tHA || tHB) |           | tH_LEAF(C) |
                                                       +-----------------------+           +------------+
 ```
+*Note:* although the tapret commitment is the same length of two concatenated hashes (64
+bytes), it's not possible to hide an alternative commitment by splitting it into two fake
+subtree roots since the taproot hashing strategy (tag + encoded data) for branches is
+different from the one for leaves. Therefore, no extra checks are required on the values
+of `tHAB` and `tHC`.
+
+**b2)** If the old root is itself a leaf node, then the leaf content must be revealed and form the Merkle proof of inclusion and uniqueness along with `P`, as shown in the diagram below:
+
+```
+* tHABC > tHT case (leaf)
+
++---+            +---+   +---+   +---+
+| Q |      =     | P | + | t | * | G |
++---+            +---+   +-^-+   +---+
+                           |
+                           +--------------------+
+                                                |
+                                +---------------+------------+
+                                | tH_TWEAK(P || Script_root) |
+                                +---------------------^------+
+                                                      |
+                                       +--------------+----------+
+                                       | tH_BRANCH( tHT || tHC)|
+                                       +-------------^-------^---+
+                                                     |       |
+                                  +------------------+       +------------------+
+                                  |                                             |
+             +--------------------+-----------------+                    +------+-----+
+             | tH_BRANCH(64_byte_Tapret_Commitment) |                    | tH_LEAF(C) |
+             +--------------------------------------+                    +------------+
+```
+
 
 ## **Nonce optimization**
 
-As an additional optimization method, the `<Nonce>` representing the last byte of the `64_byte_Tapret_Commitment` allows the user constructing the proof to attempt at "mining" a `tHT` such that `tHABC < tHT`, thus placing it in the right-hand side of the tree and definitely avoiding revealing the constituents of the script branch (in this example `tHAB` and `tHC`).
+The above construction is clearly more complex and the proof is larger when the tapret commitment lies in the
+left side of the tree, since more details on the rest of the taproot tree need to be revealed.
+In particular, in the **b2** scenario, in case `tH_LEAF(C)` contains
+spending conditions that should remain private, one may want to hide it by adding a
+dummy leaf that turns this into a **b1** case. However, this would make such spending
+conditions more expensive to spend onchain, leading to a privacy vs cost tradeoff.
 
+To avoid this complexity, the `<Nonce>` encoded in the last byte of the
+`64_byte_Tapret_Commitment` allows the prover to attempt at "mining" a `tHT` such that
+`tHABC < tHT`, thus placing it in the right-hand side of the tree and definitely
+avoiding revealing the constituents of the script branch (in this example: either
+`tHAB || tHC` or `tH_LEAF(C)`).
 ***
