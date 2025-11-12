@@ -13,25 +13,33 @@ The bitcoin funding is needed to create the channel UTXO where the assets can be
 
 Once the funding transaction has been prepared, but not yet signed and broadcast, it is time to prepare the commitment transactions that will allow both parties to unilaterally close the channel at any time. The structure of the commitment transactions are almost identical to those of normal lightning channels, with the only difference being that an extra output is added to contain the RGB anchor to the RGB state transition, which in this example uses the OP\_RETURN commitment scheme, but when Taproot payment channels will be available the Taproot commitment scheme can be used as well.
 
-The RGB state transition moves the assets from the multisig where the funding happened, towards the outputs that are being created by the lightning commitment transaction. In this way, the RGB state transition inherits directly from the lightning commitment transaction all the security properties in case of unilateral channel closing. This means that if Bob broadcast an old state, Alice will be able to spend the output using Bob’s secret, and while spending the output she will not only move the satoshis towards an address under her exclusive control, but she will also be able to move the RGB assets towards an UTXO of her. In this way, the economic punishment for trying to steal with an old state does not come only from the satoshis amount (which may be insignificant), but also from all the RGB assets that were locked in the channel.
-
-On the contrary, if the commitment transaction broadcast by Bob was indeed the last state of the channel, Alice won’t be able to spend the output triggering the punishment transaction, and Bob will be able to take both the satoshis and the RGB assets after the timelock has expired.
-
 <figure><img src="../.gitbook/assets/ln-comp2.png" alt=""><figcaption><p><strong>Commitment transaction signed by Alice and ready to be broadcasted by Bob, with associated RGB state transition.</strong></p></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/ln-comp3.png" alt=""><figcaption><p><strong>Commitment transaction signed by Bob and ready to be broadcast by Alice, with associated RGB state transition.</strong></p></figcaption></figure>
 
-As we can see in the example, the RGB state transition is moving the assets towards two allocations that correspond to the two outputs created by the lightning commitment transaction, meaning that, in the case of the commitment controlled by Bob (the red one in the diagram) the first allocation can be spent directly by Alice, while the second allocation can be spent either by Bob after the timelock expired, or by Alice using the secret of Bob.
+As we can see in the example, the RGB state transition is moving the assets towards the allocation that corresponds to the output created by the lightning commitment transaction.
+This means that Alice, if Bob were to become irresponsive until the timelock expired, would be able to recover both satoshis and USDTs she locked in the channel.
 
 ## Updating the channel
 
-When a payment occurs between the two parties and the state of the channel needs to be updated, a new pair of commitment transactions will be created. The bitcoin amounts in the output of the new commitment transaction are not relevant and may or may not stay the same as they were in a previous state (depending on the implementation), as their primary scope is to enable the creation of new UTXO, not to movement of economic value denominated in bitcoin. However, the OP\_RETURN (or in the future Taproot) output needs to change as now it will have to contain the RGB anchor to a new RGB state transition, which, differently from the previous one, will update the assets amounts reflecting the new balances after the payment happened. In the example below, 30 USDT have been moved from Alice to Bob, making the new state of the balances be 400 USDT to Alice and 100 USDT to Bob.
+When a payment occurs between the two parties and the state of the channel needs to be updated, a new pair of commitment transactions will be created.
+The bitcoin amounts in the output of the new commitment transaction are not relevant and may or may not stay the same as they were in a previous state (depending on the implementation), as their primary scope is to enable the creation of a new UTXO, not the movement of economic value denominated in bitcoin.
+However, the OP\_RETURN (or in the future Taproot) output needs to change as now it will have to contain the RGB anchor to a new RGB state transition, which, differently from the previous one, will update the asset amounts reflecting the new balances after the payment happened.
+
+In the example below, 100 USDT have been moved from Alice to Bob, making the new state of the balances be 400 USDT to Alice and 100 USDT to Bob.
 
 <figure><img src="../.gitbook/assets/ln-comp4.png" alt=""><figcaption><p><strong>Update to the commitment transaction, signed by Alice and ready to be broadcasted by Bob.</strong></p></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/ln-comp5.png" alt=""><figcaption><p><strong>Update to the commitment transaction, signed by Bob and ready to be broadcasted by Alice.</strong></p></figcaption></figure>
 
 Notice that in the RGB state transition, while the UTXO endpoints where the assets get allocated change with every new lightning commitment transaction, the RGB input is always the original funding multisig where the assets are allocated on-chain until the channel closure.
+
+The RGB state transition moves the assets from the multisig where the funding happened, towards the outputs that are being created by the lightning commitment transaction. In this way, the RGB state transition inherits directly from the lightning commitment transaction all the security properties in case of unilateral channel closing.
+Moreover, after commitments are exchanged, Alice and Bob share the revocation secrets of the previous channel state, invalidating it in favor of the new state. 
+
+This means that if Alice broadcasts an old state (trying to get back the 100 USDT she just sent), Bob will be able to spend the output using Alice’s revocation secret, and while spending the output he will not only move the satoshis towards an address under his exclusive control, but he will also be able to move the RGB assets towards himslf.
+In this way, the economic punishment for trying to steal with an old state does not come only from the satoshis amount (which may be insignificant), but also from all the RGB assets that were locked in the channel.
+On the contrary, if the commitment transaction broadcast by Bob was indeed the last state of the channel, Bob won’t be able to spend the output triggering the punishment transaction, and Alice will be able to take both the satoshis and the RGB assets after the timelock has expired.
 
 ## Introducing HTLCs
 
@@ -40,3 +48,8 @@ Above we just saw a simplification of payment channels that involve only two par
 <figure><img src="../.gitbook/assets/ln-comp6.png" alt=""><figcaption><p><strong>HTLC transaction involving RGB state transition.</strong></p></figcaption></figure>
 
 The above example only contains one HTLC output, but more can be added as needed for all the pending routed payments, and for each new HTLC output there will be a new corresponding RGB allocation in the state transition.
+
+Every HTLC output needs a bitcoin amount above dust that ensures, in case the channel is
+force-closed while the payment is in flight, the legitimate owner will be able to spend
+it and claim the corresponding assets. This means that, in practice, every RGB payment on
+lightning also needs to transfer some satoshis as well.
