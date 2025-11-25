@@ -1,6 +1,6 @@
 # Schema example: Non-Inflatable Assets
 
-In this section, we will look more closely at an actual example of an RGB Contract Schema written in Rust and contained in the [nia.rs](https://github.com/RGB-WG/rgb-schemata/blob/master/src/nia.rs) file from the [RGB Schemata Repository](../../annexes/rgb-library-map.md#rgb-schemata). The Repository contains an example set of schema templates related to other types of contracts. This Schema, which we will be using as an example in this chapter, allows for the contract setup of N**on-Inflatable Assets** **(NIA)** that can be considered as the RGB analog to Ethereum's fungible tokens created with the ERC20 standard.
+In this section, we will look more closely at an actual example of an RGB Contract Schema written in Rust and contained in the [nia.rs](https://github.com/rgb-protocol/rgb-schemas/blob/master/src/nia.rs) file from the [RGB Schemas Repository](../../annexes/rgb-library-map.md#rgb-schemas). The Repository contains an example set of schema templates related to other types of contracts. This Schema, which we will be using as an example in this chapter, allows for the contract setup of N**on-Inflatable Assets** **(NIA)** that can be considered as the RGB analog to Ethereum's fungible tokens created with the ERC20 standard.
 
 We can observe that a Schema can be divided into several general sections:
 
@@ -86,7 +86,7 @@ fn nia_schema() -> Schema {
 
 **(2)** In this section `global_state` and its variables are declared, in particular:
 
-* The token's `GS_NOMINAL` set of specifications which according to the [Strict Type Library](../../annexes/rgb-library-map.md#strict-types-and-strict-encoding) contain: the token full `name` , the `ticker`, some additional `details`, the digit `precision` of the asset.
+* The token's `GS_NOMINAL` set of specifications which according to the [Strict Type Library](../../annexes/rgb-library-map.md#strict-types) contain: the token full `name` , the `ticker`, some additional `details`, the digit `precision` of the asset.
 * `GS_TERMS` containing some additional contract `terms` such as a disclaimer.
 * `GS_ISSUED_SUPPLY` which defines the initial supply of the token. In this case, since no inflation is allowed, it also represents the max supply.
 * The `Once` statement guarantees that all these declarations are associated with a single value.

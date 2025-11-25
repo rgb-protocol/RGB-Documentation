@@ -50,7 +50,7 @@ As an interesting scalability feature of RGB, multiple **State Transitions** can
 * When all bundles are included in the tree, the empty leaves are filled with random data and its merkle root is computed. The MPC commitment, composed by the merkle root and parameters used in the tree construction, is finally included into a Tapret or Opret output thanks to [DBC](../annexes/glossary.md#deterministic-bitcoin-commitment-dbc), so that the bitcoin transaction unequivocally commits to a set of RGB state transitions.
 * The [Anchor](../commitment-layer/anchors.md) represents the _connection point_ between the Bitcoin Blockchain and the RGB client-side validation structure.
 
-In the following paragraphs, we will delve into all the elements and processes involved in the State Transition operation. All topics discussed from now on belong to RGB Consensus, which is encoded in the [RGB Core Library](../annexes/rgb-library-map.md#rgb-core).
+In the following paragraphs, we will delve into all the elements and processes involved in the State Transition operation. All topics discussed from now on belong to RGB Consensus, which is encoded in the [RGB Consensus Library](../annexes/rgb-library-map.md#rgb-consensus).
 
 ## Transition Bundle
 
@@ -81,7 +81,7 @@ Opout {
 ```
 ### BundleId
 
-From a more technical angle, the `BundleId` to be inserted in the leaf of the [MPC](state-transitions.md) is [obtained](https://github.com/RGB-WG/rgb-core/blob/vesper/doc/Commitments.md#bundle-id) from a tagged hash of the strict serialization of the `input_map` field of the bundle in the following way:
+From a more technical angle, the `BundleId` to be inserted in the leaf of the [MPC](state-transitions.md) is [obtained](../annexes/commitments.md#bundle-id) from a tagged hash of the strict serialization of the `input_map` field of the bundle in the following way:
 
 `BundleId = SHA-256( SHA-256(bundle_tag) || SHA-256(bundle_tag) || input_map )`
 
