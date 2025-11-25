@@ -128,9 +128,19 @@ A decentralized network of bidirectional payment (state) channels constituted by
 
 [Link](https://lightning.network/)
 
+### Merkle Tree
+
+A cryptographic data structure that allows small (logarithmic) inclusion proofs. It's
+composed of a binary tree in which leaves are the set elements, each intermediate node
+contains the hash of its children and the root commits to the whole set of elements.
+To prove a leaf is part of the tree it's enough to provide sibling hashes throughout the
+path from the leaf to the root, whose size grows logarithmically in the number of leaves.
+
+[More details](https://developer.bitcoin.org/reference/block_chain.html#merkle-trees)
+
 ### Multi Protocol Commitment - MPC
 
-The Merkle Tree structure used in RGB to include in a single Bitcoin Blockchain commitment the multiple [Transition Bundles](glossary.md#transition-bundle) of different contracts.
+The [Merkle Tree](glossary.md#merkle-tree) structure used in RGB to include in a single Bitcoin Blockchain commitment the multiple [Transition Bundles](glossary.md#transition-bundle) of different contracts.
 
 [Link](commitment-layer/multi-protocol-commitments-mpc.md)
 

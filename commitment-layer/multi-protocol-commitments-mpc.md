@@ -71,7 +71,7 @@ Where:
 
 ### MPC nodes
 
-After generating the base of the MPC tree having `w` leaves, merkelization is performed following the rule of `commit_verify` crate detailed [here](https://github.com/RGB-WG/rgb-core/blob/vesper/doc/Commitments.md#merklization-procedure).
+After generating the base of the MPC tree having `w` leaves, merkelization is performed following the rule of `commit_verify` crate detailed [here](../annexes/commitments.md#merklization-procedure).
 
 The hash for non-leaf nodes in the tree is computed as:
 

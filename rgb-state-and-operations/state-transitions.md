@@ -81,7 +81,7 @@ Opout {
 ```
 ### BundleId
 
-From a more technical angle, the `BundleId` to be inserted in the leaf of the [MPC](state-transitions.md) is [obtained](https://github.com/RGB-WG/rgb-core/blob/vesper/doc/Commitments.md#bundle-id) from a tagged hash of the strict serialization of the `input_map` field of the bundle in the following way:
+From a more technical angle, the `BundleId` to be inserted in the leaf of the [MPC](state-transitions.md) is [obtained](../annexes/commitments.md#bundle-id) from a tagged hash of the strict serialization of the `input_map` field of the bundle in the following way:
 
 `BundleId = SHA-256( SHA-256(bundle_tag) || SHA-256(bundle_tag) || input_map )`
 

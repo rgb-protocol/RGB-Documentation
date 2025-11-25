@@ -69,11 +69,9 @@ In addition, we also have several operation-specific fields:
 
 Finally, through a custom hashing methodology, all of the fields in the Contract Operation are summarized into an `OpId` commitment that is placed in the [Transition Bundle](state-transitions.md#transition-bundle).
 
-We will cover each contract component in a dedicated subsection. The complete memory layout of each component of a contract operation is given [here](https://github.com/RGB-WG/rgb-core/blob/v0.11.1-alpha.2/stl/Transition.vesper).
-
 ## OpId
 
-Each Contract Operation is identified by a 32-byte hash called `OpId`, which is, precisely, the ordered SHA-256 hashing of the element contained in the State Transition. Each [Contract Operation](../annexes/glossary.md#contract-operation) has its own customized [commitment and hashing methodology](https://github.com/RGB-WG/rgb-core/blob/vesper/doc/Commitments.md#operation-id-and-contract-id).
+Each Contract Operation is identified by a 32-byte hash called `OpId`, which is, precisely, the ordered SHA-256 hashing of the element contained in the State Transition. Each [Contract Operation](../annexes/glossary.md#contract-operation) has its own customized [commitment and hashing methodology](../annexes/commitments.md#operation-id-and-contract-id).
 
 ## ContractId
 
@@ -161,7 +159,7 @@ The first main component of the Assignment construct is the [Seal Definition](ht
 * `vout` is the transaction output number within the Transaction which `txptr` refers to. The `txptr`  field together with `vout` field constitute an extension of the standard _outpoint_ representation of Bitcoin transactions.
 * `blinding` is a random number of 8 bytes, which allows the seal data to be effectively hidden once they have been hashed, providing privacy to the recipient at least until the allocation is later spent again.
 
-The `concealed` form of the Seal Definition is simply the SHA-256 [tagged hash](https://github.com/RGB-WG/rgb-core/blob/vesper/doc/Commitments.md#specific-rgb-consensus-commitments) of the concatenation of the four fields:
+The `concealed` form of the Seal Definition is simply the SHA-256 [tagged hash](../annexes/commitments.md#specific-rgb-consensus-commitments) of the concatenation of the four fields:
 
 `SHA-256(SHA-256(seal_tag) || SHA-256(seal_tag) || txptr || vout || blinding)`
 
