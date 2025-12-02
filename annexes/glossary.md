@@ -134,7 +134,7 @@ A cryptographic data structure that allows small (logarithmic) inclusion proofs.
 composed of a binary tree in which leaves are the set elements, each intermediate node
 contains the hash of its children and the root commits to the whole set of elements.
 To prove a leaf is part of the tree it's enough to provide sibling hashes throughout the
-path from the leaf to the root, whose size grows logarithmically in the number of leaves.
+path from the leaf to the root, whose size grows logarithmically with the number of leaves.
 
 [More details](https://developer.bitcoin.org/reference/block_chain.html#merkle-trees)
 

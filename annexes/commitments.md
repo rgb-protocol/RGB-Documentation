@@ -5,7 +5,7 @@ mechanism, implemented via `CommitEncode` trait. Depending on the specific data,
 the mechanism can be partially or completely different from strict
 serialization, used for data storage. For instance, all data which may be
 confidential must be concealed, such that parties having no access to the
-original non-confidential values still be able to generate the same
+original non-confidential values are still able to generate the same
 deterministic commitment value and verify single-use seals.
 
 Any final consensus commitment is a SHA256 tagged hash. The tagging is performed
@@ -50,7 +50,7 @@ use `CommitId` trait, which automatically extends it with user-facing methods.
 Each consensus commitment must have a dedicated Rust type, which wraps over
 inner `Bytes32` - a 32-byte resulting tagged hash value. The type is marked as
 a consensus commitment by implementing `CommitmentId` trait for it, which
-requires to provide a tag string values for the tagged hash.
+requires to provide a tag string value for the tagged hash.
 
 The hash tags are defined using URN strings in form of
 `urn:<org>:<protocol>:<data>#<date>`, where `<org>` stands for the organization,
@@ -73,8 +73,8 @@ used for automatically generating the documentation on the commitment workflow.
 Merlization is the procedure of computing the root of a
 [Merkle Tree](glossary.md#merkle-tree) to be used as a commitment.
 It uses traits and data types from `merkle.rs` module of `commit_verify` crate and it
-commits to the tree parameters, such as number of elements, depth of the tree, as well
-as depth of each node.
+commits to the tree parameters, such as number of elements, depth of the tree and
+depth of each node.
 
 The main data type, related to the merklization, is `MerkleHash`: it is a tagged
 hash (using `urn:ubideco:merkle:node#2024-01-31` tag) representing node at any
@@ -134,10 +134,10 @@ generated with the same procedure as the operation commitment.
 
 The commitment ids can be generated with either type-specific methods
 (`schema_id()` for schema, `bundle_id()` for state transition bundle and
-`id()` for any operation) or `CommitId::commit_id()` method, which must provide
-the equal result.
+`id()` for any operation) or the `CommitId::commit_id()` method, which must provide
+the same result.
 
-Here are more details on each type of the commitments:
+Here are more details on each commitment type:
 
 | Commitment ID        | Produced by                          | Procedure                                                                                      | Tag URN suffix(1)             |
 |----------------------|--------------------------------------|------------------------------------------------------------------------------------------------|-------------------------------|
@@ -146,11 +146,10 @@ Here are more details on each type of the commitments:
 | `BundleId`           | `TransitionBundle`                   | conceal and partial strict serialization                                                       | `rgb:bundle#2024-02-03`       |
 | `SecretSeal`         | `BlindSeal`                          | conceal and strict serialization                                                               | `seals:secret#2024-02-03`     |
 
-(1): "URN suffix" is a part which follows "urn:lnp-bp:" prefix.
+(1): "URN suffix" is the part that follows the "urn:lnp-bp:" prefix.
 
-Additionally to these types there are two other commitment ids used internally
-by merklization and strict encoding procedures: `MerkleHash` (discussed in the
-Merklization section above) and `StrictHash` from `commit_verify` crate:
+Additionally to these types there are three other commitment ids used internally
+by merklization and strict encoding procedures:
 
 | Commitment ID     | Tag URN suffix                                   |
 |-------------------|--------------------------------------------------|
