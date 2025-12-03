@@ -16,34 +16,26 @@ a new SHA256 hasher twice before any actual data.
 
 ## Generating commitment id
 
-The commitment mechanism uses traits from [`commit_verify`] crate, specifically
-its `id.rs`and `merkle.rs` modules.
+The commitment mechanism uses traits from [`commit_verify`] module in
+`rgb-consensus`, specifically its `id.rs`and `merkle.rs` submodules.
 
 ### `CommitEncode` trait
 
 It is the main trait which must be implemented for each type requiring a
 dedicated commitment id.
 
-The trait implementation can be done either with derive macro
-`#[derive(CommitEncode)]` or by providing a manual implementation.
+The trait requires to define:
+- `CommitmentId` specifies a commitment id type, i.e. a type wrapping 32-byte
+  tagged SHA256 hash, implementing `CommitmentId` trait (see details below).
+  For instance `Operation` defines `OpId` as its commitment type.
+- `commit_encode` specifies an encoding for the bytestream that will be
+  the input of the tagged hasher. Typical strategies are:
+  * strict: the data is strict-serialized
+  * conceal: the data is concealed and then strict-serialized
+  * merkle: the data is organized in a merkle tree structure to obtain the merkle root
 
-The derive macro takes two arguments: `strategy` and `id`:
-- `id` must specify a resulting commitment id type, i.e. type wrapping 32-byte
-  tagged SHA256 hash, implementing `CommitmentId` trait (the implementation
-  provides a tag for the hasher - see trait details below). The type must also
-  provide a converting constructor from `commit_verify::Sha256` hasher.
-- `strategy` specifies a workflow used to feed the type data to the SHA256
-  tagged hasher:
-  * `strategy = strict`: the hasher receives strict-serialized object;
-  * `strategy = conceal`: the type data are first concealed, and only then are
-    strict-serialized into the hasher.
-
-Manual `CommitEncode` implementation must be provided only when the commitment
-procedure is custom and can't be implemented using any of the strategies, for
-instance when a collection must be merklized (see on merklization below).
-
-NB: you should never call methods of `CommitEncode` trait directly, and instead
-use `CommitId` trait, which automatically extends it with user-facing methods.
+NB: It should never be necessary to call methods of `CommitEncode` trait directly,
+since `CommitId` trait automatically extends it with user-facing methods.
 
 ### `CommitmentId` trait
 
@@ -58,12 +50,15 @@ The hash tags are defined using URN strings in form of
 producing the commitment, and `<date>` is a `YYYY-MM-DD` string for the latest
 revision of the commitment layout.
 
+Any type implementing `CommitmentId` must also implement `From<Sha256>`, which allows for
+automated construction of commitments from the hasher.
+
 ### `CommitId` trait
 
-This trait is automatically implemented for all types which have `CommitEncode`
-implementation. It can't be implemented manually and it exposes a `CommitId::commit_id()`
-method to produce the final commitment (i.e. bytes of the tagged hash in form of
-the corresponding type implementing `CommitmentId`).
+This trait is automatically implemented for all types thjat implement `CommitEncode` and
+it can't be implemented manually.
+It exposes a `CommitId::commit_id()` method to produce the final commitment (i.e. the result
+of the hashing procedure, wrapped in the the corresponding type implementing `CommitmentId`).
 
 The trait also provides `CommitId::commitment_layout()` method, which can be
 used for automatically generating the documentation on the commitment workflow.
@@ -181,18 +176,14 @@ Operation id is represented by a `OpId` type and produced for `Genesis` and
 `Transition` types through a dedicated `OpCommitment` structure that is then
 strict-serialized and hashed.
 
-`OpCommitment` consists of a sub-commitments to blocks of the
-operation data, where each sub-commitment is created with a custom procedure.
-For instance, operation global state, inputs and assignments are merklized,
-such that a succinct proofs of some specific state or input inclusion in RGB
-operation can be produced and used in smart contracts. Additionally to that,
-assignments are concealed before the merklization, and range proofs are
-removed from the commitment, such that an aggregation of the historical proofs
-can be applied without changing the operation ids.
+`OpCommitment` consists in a set of commitments to blocks of the operation data, each
+generated with a specific procedure.
 
-To ensure succinctness, other types of collections, such as metadata, are not
-merklized and strict-serialized producing `StrictHash`, which participates in
-the final `OpCommitment` structure.
+For instance, global state, inputs and assignments are merklized, such that compact
+proofs of inclusion can be produced and used in smart contracts.
+Additionally to that, assignments are concealed before the merklization, such that an
+entity that does not know the blinding factor can still reproduce the same operation ID.
+Other collections such as metadata are simply strict-serialized, producing a `StrictHash` as sub-commitment.
 
 ```mermaid
 flowchart LR
