@@ -50,6 +50,6 @@ This guide targets the broader technical audience willing to understand in depth
 
 The production of this documentation has been sponsored by [Bitfinex](https://www.bitfinex.com/) and the material provided is mostly based on a 3-day full-immersion seminar on RGB Protocol held by [Maxim Orlovsky](https://twitter.com/dr\_orlovsky) at the Tuscany Lightning Bootcamp in October 2023.
 
-Videos: [https://planb.network/en/courses/csv402](https://planb.network/en/courses/csv402)
+Videos: [https://planb.academy/courses/3ce1d37c-05ba-4f54-aa15-7586d37b2bb7](https://planb.academy/courses/3ce1d37c-05ba-4f54-aa15-7586d37b2bb7)
 
 ***
