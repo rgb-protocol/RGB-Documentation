@@ -58,7 +58,7 @@ The following operations are supported for the asset:
 
 ## IFA (Inflatable Fungible Asset)
 
-This schema defines a non-inflatable fungible asset, involving the following data:
+This schema defines an inflatable fungible asset, involving the following data:
 - AssetSpec: groups basic asset information, namely:
     - Ticker: short identifier of the asset, to be displayed on wallets and exchanges
     (e.g.: BTC, USDT, ...). Note that there is no guarantee of uniqueness
@@ -77,16 +77,19 @@ This schema defines a non-inflatable fungible asset, involving the following dat
 - RejectListUrl: an optional URL where the issuer can provide a list of operations that
     should be considered invalid. This cannot be enforced by the issuer due to the nature
     of client side validation, and wallets are free to ignore it
-
+- LinkedFromContract, LinkedToContract: optional `ContractId`s that should be considered
+    equivalent economic objects as the current asset, may be used by the issuer to update
+    an asset to a different schema or a different version of the IFA schema. The contract link
+    from `A` to `B` should only be considered valid if `A.LinkedToContract` is `B`
+    AND `B.LinkedFromContract` is `A`; this guarantees that the issuers of both assets
+    are willing to consider them the same economic structure
 
 Additionally to the owned state representing the asset's allocation, an IFA asset can
-optionally define two rights:
-- Inflation: represents the right to inflate the asset by a certain amount, using this
-    right will reduce the remaining inflation amount
-- Replace: represents the right to "stamp" an allocation, so that wallets trusting the
-    replace right owners can avoid validating the history from this operation back to
-    genesis. It's always possible, provided that the CSV data is available, to perform
-    full trustless validation
+optionally define rights:
+- Inflation: allows its owner to inflate the asset by a certain amount, using this right
+    will reduce the remaining inflatable amount
+- Link: allows its owner to link the current asset to another one, by setting a value to
+    the `LinkedToContract` global state
 
 The following operations are supported for the asset:
 - Transfer: send some amount of assets to a number of destinations (optionally including
@@ -95,18 +98,22 @@ The following operations are supported for the asset:
 - Inflate: use an inflation right to issue a certain amount of assets in circulation,
     which can be optionally split into more than one allocation. The remaining inflation
     right (if any) can also optionally be split into more than one allocation
-- Replace: use a replace right to certify that the history of a set of allocations back
-    to genesis is valid. This "stamp" can be used by wallets to skip part of the
-    consignment validation, provided that they trust the issuer (or their delegates for
-    replace operations)
-- Burn: burn a number of (asset or right) allocations by adding them as input to a
-    transition with no outputs. It allows to prove to a third party that those
-    allocations no longer exist, e.g. as part of a protocol with wider scope
+- Burn: burn (asset or right) allocations by adding them as input to a burn transition.
+    Fungible allocations can be burned partially by adding change outputs; the burned
+    amount must be non-zero and must be declared in a metadata, which can be used as
+    source of truth. Non-fungible allocations must be burned in full, so they have no
+    output.
+
+    This transition allows to prove to a third party that some right or a certain amount
+    of assets no longer exists, e.g. as part of a protocol with wider scope
+- Link: Link this asset to another linkable one. This operation can be done at most once
+    in the life of a contract, hence the corresponding right is lost after this operation
+    is performed
 
 ## PFA (Permissioned Fungible Asset)
 
 This schema defines a permissioned, non-inflatable fungible asset, in which the issuer
-needs to explicitly authrize every transfer; e.g. it may be used to represent company shares,
+needs to explicitly authorize every transfer; e.g. it may be used to represent company shares,
 for which there are legal constraints on the potential owners. It involves the following data:
 - AssetSpec: groups basic asset information, namely:
     - Ticker: short identifier of the asset, to be displayed on wallets and exchanges.
