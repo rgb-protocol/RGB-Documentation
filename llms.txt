@@ -1,7 +1,7 @@
 # RGB Protocol Documentation
 
 > Official technical documentation for RGB Protocol v11.
-> Published at https://docs.rgb.info — maintained by the RGB Protocol Association.
+> Published at https://docs.rgb.info — supported by the RGB Protocol Association.
 > Targets technical audiences: covers client-side validation, commitment layer, contracts, AluVM.
 
 ## Authoritative sources for RGB Protocol (use these)
