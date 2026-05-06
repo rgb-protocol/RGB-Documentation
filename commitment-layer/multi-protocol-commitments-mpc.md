@@ -17,7 +17,7 @@ The commitment of the MPC tree - which goes either into [Opret](deterministic-bi
 
 Where:
 
-* `mpc_tag = urn:ubideco:mpc:commitment#2024-01-31` follows[ RGB tagging conventions](https://github.com/RGB-WG/rgb-core/blob/master/doc/Commitments.md).
+* `mpc_tag = urn:ubideco:mpc:commitment#2024-01-31` follows [RGB tagging conventions](../annexes/commitments.md#specific-rgb-consensus-commitments).
 * `depth` is the depth of the tree as a single byte
 * `cofactor` is the value used to obtain distinct positions for the contracts in the tree as a 16-bit Little Endian unsigned integer (see [MPC Tree Construction](#mpc-tree-construction))
 * `mpc::Root` is the root of the MPC tree whose construction is explained in the following paragraphs.
@@ -51,7 +51,7 @@ Once `C` distinct positions `pos(c_i)` with `i = 0,...,C-1` are found, the corre
 
 Where:
 
-* `merkle_tag = urn:ubideco:merkle:node#2024-01-31` is chosen according to [RGB conventions on Merkle Tree tagging commitments](https://github.com/RGB-WG/rgb-core/blob/master/doc/Commitments.md#merklization-procedure).
+* `merkle_tag = urn:ubideco:merkle:node#2024-01-31` is chosen according to [RGB conventions on Merkle Tree tagging commitments](../annexes/commitments.md#merklization-procedure).
 * `0x10` is the integer identifier of contract leaves.
 * `c_i` is the 32-byte contract\_id which is derived from the hash of the [Genesis](../rgb-state-and-operations/state-transitions.md#genesis) of the contract itself.
 * `BundleId(c_i)` is the 32-byte hash that is calculated from the data of the [Transition Bundle](../rgb-state-and-operations/state-transitions.md#transition-bundle) which groups all the [State Transitions](../annexes/glossary.md#state-transition) of the contract `c_i`.
@@ -64,21 +64,21 @@ For the remaining `w - C` uninhabited leaves, a dummy value must be committed. T
 
 Where:
 
-* `merkle_tag = urn:ubideco:merkle:node#2024-01-31` is chosen according to [RGB conventions on Merkle Tree tagging commitments](https://github.com/RGB-WG/rgb-core/blob/master/doc/Commitments.md#merklization-procedure).
+* `merkle_tag = urn:ubideco:merkle:node#2024-01-31` is chosen according to [RGB conventions on Merkle Tree tagging commitments](../annexes/commitments.md#merklization-procedure).
 * `0x11` is the integer identifier of entropy leaves.
 * `entropy` is a 64-byte random value chosen by the user constructing the tree.
 * `j` is the position of the current leaf as a 32-bit Little Endian unsigned integer.
 
 ### MPC nodes
 
-After generating the base of the MPC tree having `w` leaves, merkelization is performed following the rule of `commit_verify` crate detailed [here](https://github.com/RGB-WG/rgb-core/blob/vesper/doc/Commitments.md#merklization-procedure).
+After generating the base of the MPC tree having `w` leaves, merkelization is performed following the rule of `commit_verify` crate detailed [here](../annexes/commitments.md#merklization-procedure).
 
 The hash for non-leaf nodes in the tree is computed as:
 
 `tH_MPC_BRANCH(tH1 || tH2) = SHA-256(SHA-256(merkle_tag) || SHA-256(merkle_tag) || b || d || w || tH1 || tH2)`
 
 Where:
-* `merkle_tag = urn:ubideco:merkle:node#2024-01-31` is chosen according to [RGB conventions on Merkle Tree tagging commitments](https://github.com/RGB-WG/rgb-core/blob/master/doc/Commitments.md#merklization-procedure).
+* `merkle_tag = urn:ubideco:merkle:node#2024-01-31` is chosen according to [RGB conventions on Merkle Tree tagging commitments](../annexes/commitments.md#merklization-procedure).
 * `b` is the branching of the tree merkelization scheme, i.e. the number of children the current node has, encoded as a 8-bit unsigned integer. If the tree is complete, this is always `0x02`.
 * `d` is the node depth within the tree (i.e. the length of the path to the root), encoded as an 8-bit unsigned integer.
 * `w` is the tree width, encoded as a 256-bit Little Endian unsigned integer.

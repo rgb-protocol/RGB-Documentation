@@ -10,7 +10,7 @@ In RGB, this set of data is actually an **arbitrary rich set of data** which:
 * Can be **nested**, meaning that a type can be constructed from other types.
 * Can be organized in `lists`, `sets` or `maps`.
 
-To properly encode data in the state in a reproducible way, a [Strict Type System](../annexes/rgb-library-map.md#strict-types-and-strict-encoding) has been adopted in RGB along with [Strict Encoding](../annexes/rgb-library-map.md#strict-types-and-strict-encoding). This means that:
+To properly encode data in the state in a reproducible way, a [Strict Type System](../annexes/rgb-library-map.md#strict-types) has been adopted in RGB. This means that:
 
 * Encoding of the data is done following some [Schema](../annexes/glossary.md#schema) structure which, unlike JSON or YAML, defines a precise layout of the data, thus also allowing deterministic ordering of each data element.
 * The ordering of elements within each collection (i.e., in lists, sets or maps) is also deterministic.
