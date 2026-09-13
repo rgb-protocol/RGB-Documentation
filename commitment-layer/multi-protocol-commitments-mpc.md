@@ -157,3 +157,7 @@ From a verifier's perspective, in order to prove the presence of client-side val
 {% endcode %}
 
 So the Merkle Proof provided to verify the existence and uniqueness of contract commitment in the tree is: `tH_MPC_LEAF(D)`, `tH_MPC_BRANCH(tHA || tHB)` and `tH_MPC_BRANCH(tHEF || tHGH)`. These are enough to recompute the tree root and, together with `pos(c_2)` and `cofacor`, reproduce the MPC commitment to be compared with the one included in the anchor.
+
+### Reference implementation
+
+A python reference implementation for MPC tree construction and verification can be found [here](https://github.com/RGB-Tools/RGB-Documentation/tree/master/reference-implementations/mpc.py).
