@@ -53,12 +53,12 @@ In order to include the Tapret commitment, **the transaction is modified to incl
              +---------------------^------+
                                    |
          +-------------------------+------------+
-         | tH_BRANCH(64-byte_Tapret_Commitment) |
+         |  tH_LEAF(64-byte_Tapret_Commitment)  |
          +--------------------------------------+
 ```
 
 * `t = tH_TWEAK(P || Script_root)` = SHA-256(SHA-256(_TapTweak_) || SHA-256(_TapTweak_) || P || Script\_root) is the modified tweaking factor.
-* `Script_root = tH_BRANCH(`64-byte\_Tapret\_Commitment`)` = SHA-256(SHA-256(_TapBranch_) || SHA-256(_TapBranch_) || 64-byte\_Tapret\_Commitment) is the script root of the Script Path Spend.
+* `Script_root = tH_LEAF(`64-byte\_Tapret\_Commitment`)` = SHA-256(SHA-256(_TapLeaf_) || SHA-256(_TapLeaf_) || version\_leaf(64-byte\_Tapret\_Commitment) || size(64-byte\_Tapret\_Commitment) || 64-byte\_Tapret\_Commitment) is the script root of the Script Path Spend.
 
 The proof of inclusion and uniqueness in the Taproot Script Tree is simply the internal key `P`.
 
@@ -125,7 +125,7 @@ The new Taproot Output Key `Q` including the Tapret commitment is built as follo
                      +-------------------------------+       +-------+
                      |                                               |
           +----------+-------------+               +-----------------+--------------------+
-          | tH_BRANCH(tHAB || tHC) |               | tH_BRANCH(64-byte_Tapret_Commitment) |
+          | tH_BRANCH(tHAB || tHC) |               |  tH_LEAF(64-byte_Tapret_Commitment)  |
           +------------^-------^---+               +--------------------------------------+
                        |       |
              +---------+       +-----------+
@@ -170,7 +170,7 @@ Therefore, **three cases** can occur, resulting in two different proofs of uniqu
                      +-------------------------------+       +-------+
                      |                                               |
           +----------+-------------+               +-----------------+--------------------+
-          | tH_BRANCH(tHAB || tHC) |               | tH_BRANCH(64-byte_Tapret_Commitment) |
+          | tH_BRANCH(tHAB || tHC) |               |  tH_LEAF(64-byte_Tapret_Commitment)  |
           +------------------------+               +--------------------------------------+
 </code></pre>
 
@@ -198,7 +198,7 @@ Therefore, **three cases** can occur, resulting in two different proofs of uniqu
                                   +------------------+       +------------------+
                                   |                                             |
              +--------------------+-----------------+              +------------+-----------+
-             | tH_BRANCH(64-byte_Tapret_Commitment) |              | tH_BRANCH(tHAB || tHC) |
+             |  tH_LEAF(64-byte_Tapret_Commitment)  |              | tH_BRANCH(tHAB || tHC) |
              +--------------------------------------+              +------------^-------^---+
                                                                                 |       |
                                                                    +------------+       +--------+
@@ -231,7 +231,7 @@ Therefore, **three cases** can occur, resulting in two different proofs of uniqu
                                   +------------------+       +------------------+
                                   |                                             |
              +--------------------+-----------------+                    +------+-----+
-             | tH_BRANCH(64-byte_Tapret_Commitment) |                    | tH_LEAF(C) |
+             |  tH_LEAF(64-byte_Tapret_Commitment)  |                    | tH_LEAF(C) |
              +--------------------------------------+                    +------------+
 ```
 
