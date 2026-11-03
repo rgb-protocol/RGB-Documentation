@@ -1,15 +1,15 @@
 # Deterministic Bitcoin Commitments - DBC
 
-For RGB commitment operations, the main requirement for a Bitcoin commitment scheme to be valid is that:
+To perform RGB commitment operations, the main requirement for a Bitcoin commitment scheme to be valid is the following:
 
 > The witness transaction must provably contain a single commitment.
 
-With this requirement, it is not possible to construct an "alternative history" related to client-side data commitment in the same transaction. Thus, the message around which the single-use seal is closed is unique. To meet the above requirement, regardless of the number of outputs in a transaction, _one and only one output_ contains a valid commitment (either Opret or Tapret):
+Due to this requirement, it is not possible to construct an "alternative history" of the client-side data committed to the same transaction. Thus, the message which the single-use seal encloses is unique. To meet the above requirement, regardless of the number of outputs in a transaction, a valid commitment (either Opret or Tapret) must be contained in _one and only one output_:
 
-> The only valid output that can contain an RGB message commitment is the first DBC-compatible output, i.e. the first that has either:
-> 1. an OP\_RETURN spending script; in this case it will encode its Opret commitment there
-> 2. a taproot spending script; in this case it will encode its Tapret commitment in the corresponding taproot tree
+> The only valid output that can contain an RGB message commitment is the first DBC-compatible output, i.e. the first that either has:
+> 1. an OP\_RETURN output; in this case the Opret commitment will be encoded inside it
+> 2. a Taproot output; in this case the Tapret commitment will be encoded in the corresponding Taproot tree
 
-It is worth observing that a transaction **only contains either a single** `Opret` **OR a single** `Tapret` commitment in the first applicable output. This approach guarantees uniqueness of the seal closing strategy without committing to it at seal creation, allowing to avoid the complexity of transfers involving multiple commitment schemes. This means that, in case a witness transaction contains both a taproot and an OP\_RETURN output, the second one will be ignored by the RGB validation.
+It is worth observing that a transaction has to **only contain either a single** `Opret` **OR a single** `Tapret` commitment in the first applicable output. This approach guarantees that the seal closing strategy is always unique, no matter how the seal was created in the first place. As a consequence, if a witness transaction contained both a Taproot and an OP\_RETURN output, the second one would be ignored by the RGB validation process.
 
 ***
