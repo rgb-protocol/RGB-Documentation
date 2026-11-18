@@ -24,7 +24,7 @@ If a [Tapret](deterministic-bitcoin-commitments-dbc/tapret.md) commitment is use
 
 * Internal Public Key `P` of the Taproot output used.
 * Partner node(s) of the [Taproot](../annexes/glossary.md#taproot) `Script Path Spend` which is either:
-  * The top left branch (in the [example](deterministic-bitcoin-commitments-dbc/tapret.md#tapret-incorporation-in-pre-existing-script-path-spend): `tHABC`) if the `Tapret` commitment is on the right side of the tree.
+  * The top left branch (in the [example](deterministic-bitcoin-commitments-dbc/tapret.md#tapret-incorporation-in-a-pre-existing-script-path-spend): `tHABC`) if the `Tapret` commitment is on the right side of the tree.
   * The left and right nodes of the upper right branch (in the same example they are: `tHAB` and `tHC`) if the `Tapret` commitment is on the left side of the tree.
 * The [nonce](deterministic-bitcoin-commitments-dbc/tapret.md#nonce-optimization), if used, to optimize the Partner node part of the proof.
 
