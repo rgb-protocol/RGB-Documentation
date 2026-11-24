@@ -8,9 +8,9 @@ Let's now deep-dive into all the components of a [Contract Operation](../annexes
                |  Contract Operation                                                                                                 |
                |                                                                                 +-----------------------+           |
                |                                                                                 | ChainNet              |           |
-               |  +-----+         +-----------------------+          +----------------+          | +-------+ +---------+ |           |
-               |  | Ffv |         | ContractId | SchemaId |          | TransitionType |          | | Chain | | Network | |           |
-               |  +-----+         +-----------------------+          +----------------+          | +-------+ +---------+ |           |
+               |  +-----+         +-----------------------+          +----------------+          |                       |           |
+               |  | Ffv |         | ContractId | SchemaId |          | TransitionType |          |  (single enum value)  |           |
+               |  +-----+         +-----------------------+          +----------------+          |                       |           |
                |                                                                                 +-----------------------+           |
                |  +-----------------------------------------------+  +------------------------------------------------------------+  |
                |  | Metadata                                      |  | Global State                                               |  |
@@ -63,11 +63,13 @@ In addition, we also have several operation-specific fields:
 * `TransitionType` a 16-bit integer indicating the type of Transition expressed by the operation encoded in the Contract [Schema](../annexes/glossary.md#schema) and representing the manifestation of the [Business Logic](../annexes/glossary.md#business-logic) of the contract. It's not present in [Genesis](../annexes/glossary.md#genesis).
 * `ContractId` the 32-byte number that references the `OpId` of the Genesis of the contract. Naturally, it's only present in State Transitions, but not in Genesis.
 * `SchemaId` is a field found only in Genesis, instead of the `ContractId`. It's a 32-byte hash of the contract [Schema](../annexes/glossary.md#schema) used in the contract.
-* `Testnet` is a boolean variable indicating the use of Bitcoin Testnet or Mainnet. It is only present in Genesis.
-* `ChainNet` is an object that describes the context in which the contract should operate; it is composed by `Chain` (e.g. Bitcoin, [Liquid](https://blockstream.com/liquid/)) and `Network` (e.g. `Mainnet`, `Testenet`). It is only present in Genesis.
+* `ChainNet` describes the chain and network the contract operates on. It is a single enumeration whose values are `BitcoinMainnet`, `BitcoinTestnet3`, `BitcoinTestnet4`, `BitcoinSignet`, `BitcoinSignetCustom`, `BitcoinRegtest`, `LiquidMainnet` and `LiquidTestnet` ([Liquid](https://blockstream.com/liquid/)). It is only present in Genesis.
+* `Timestamp`, `Issuer` and `SealClosingStrategy` are further Genesis-only fields: the issuance time, an identity string of the issuer, and the seal closing strategy (currently the only defined value is `FirstOpretOrTapret`).
+* `Nonce` is a 64-bit integer present in State Transitions, together with the transition type and the `OpId`, it defines the consensus ordering of operations (used e.g. to order global state). Genesis has no nonce field; `u64::MAX` is used in its place when computing the `OpId`.
 * `Metadata` that allows you to declare temporary variables that are useful for validating complex contracts, but that do not have to be recorded as [state](../annexes/glossary.md#contract-state) properties.
+* `Signature` is an optional field of State Transitions. It is **not** part of the `OpId`: it holds a signature over the `OpId` itself, which a schema can require and verify through its validation script (e.g. the `vts` instruction used by the [PFA](../rgb-contract-implementation/schema/supported-schemas.md#pfa-permissioned-fungible-asset) schema).
 
-Finally, through a custom hashing methodology, all of the fields in the Contract Operation are summarized into an `OpId` commitment that is placed in the [Transition Bundle](state-transitions.md#transition-bundle).
+Finally, through a custom hashing methodology, all of the fields in the Contract Operation, except the transition `Signature`, are summarized into an `OpId` commitment that is placed in the [Transition Bundle](state-transitions.md#transition-bundle).
 
 ## OpId
 
@@ -75,7 +77,7 @@ Each Contract Operation is identified by a 32-byte hash called `OpId`, which is,
 
 ## ContractId
 
-As an important additional feature, the `ContractId` of a smart contract is calculated by using the `OpId` of its [Genesis](../annexes/glossary.md#genesis) and applying to it a _Reverse byte order operation_ plus a [Base58](https://en.wikipedia.org/wiki/Binary-to-text\_encoding#Base58) encoding.
+The `ContractId` of a smart contract has the same 32 bytes as the `OpId` of its [Genesis](../annexes/glossary.md#genesis), with no byte reversal. Its string representation uses Baid64 encoding with the `rgb:` prefix (e.g. `rgb:2whK8s5O-b1LG4rR-OhXpDq1-SjyHvKx-OhTEFjQ-aba0V_o`).
 
 ## Contract State
 
@@ -251,11 +253,11 @@ Similar to Bitcoin Transactions, **Inputs represent the "other half" of the Assi
 
 * `PrevOpId` containing the identifier of the previous Assignment operation being referenced.
 * `AssignmentType` containing the identifier of the contract property being modified by the referenced Assignment.
-* `Index` is the index number of the Assignment being referenced within the Assignment list of the `PrevOpId`. The `Index` is calculated implicitly from the lexicographic sorting of the hashes of the **Concealed Seal** of the referenced Assignments.
+* `Index` is the position of the referenced Assignment within the list of Assignments of type `AssignmentType` in the `PrevOpId` operation, in the order in which they appear there. Consensus does not sort this list (the RGB library sorts assignments by seal when it builds an operation, but validation only uses their stored order).
 
 The validation procedure of RGB, in addition to checking the correct closure of the Seal, is also responsible for checking the consistency between the inputs and outputs, particularly for the `Fungible` StateType. In this case, the validation procedure, embedded in the [AluVM](../annexes/glossary.md#aluvm) script part of the [Schema](../annexes/glossary.md#schema), checks that the amount of tokens of each Input of a specific `AssignmentType` matches the number of tokens of the Assignments with the same `AssignmentType`.
 
-As a natural property, Genesis has no Inputs as well as all State Transitions that don't change some Owned States of any kind. For example, a State Transition that changes only the Global State has no Inputs.
+As a natural property, Genesis has no Inputs. Every State Transition, instead, must have at least one Input.
 
 ## Metadata
 

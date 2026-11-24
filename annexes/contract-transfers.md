@@ -36,7 +36,7 @@ bob$ rgb invoice <ContractId> --amount 100
 alice$ wallet construct tx.psbt
 ```
 
-**8)** Then Alice, through a shell command, is now able to generate [terminal consignment](glossary.md#terminal-consignment-consignment-endpoint) `consignment.rgb` that contains, according to the instruction of Bob's `<invoice>` :
+**8)** Then Alice, through a shell command, is now able to generate [transfer consignment](glossary.md#consignment) `consignment.rgb` that contains, according to the instruction of Bob's `<invoice>` :
 
 * The final RGB [state transition](glossary.md#state-transition) client-side data.
 * The history of state transitions since contract [genesis](glossary.md#genesis) and contained in validated form in Alice's stash.
@@ -48,7 +48,7 @@ alice$ wallet construct tx.psbt
 alice$ rgb transfer tx.psbt <invoice> consignment.rgb
 ```
 
-**9)** This **terminal consignment**, obviously larger than a contract consignment because of the inclusion of the entire history of the asset, **is then forwarded to Bob**, even though the related witness transition has not yet been broadcasted into the Bitcoin P2P Network.
+**9)** This **transfer consignment**, obviously larger than a contract consignment because of the inclusion of the entire history of the asset, **is then forwarded to Bob**, even though the related witness transition has not yet been broadcasted into the Bitcoin P2P Network.
 
 <figure><img src="../.gitbook/assets/txf2 (1).webp" alt=""><figcaption><p><strong>Alice prepares a witness transaction including the information provided both by Bob's invoice and those coming from her RGB and Bitcoin wallet. In addition, through a transfer consignment allows Bob to verify all the asset history as well as the last state transition addressed to him.</strong></p></figcaption></figure>
 
