@@ -60,7 +60,7 @@ However, RGB natively supports batching operations, so that one or more payers c
 
 A Transition Bundle contains:
 * `input_map`, which maps all the [Assignments](../annexes/glossary.md#assignment) being spent to the State Transition spending each of them; it contains all the information that needs to be committed onchain
-* `known_transitions`, a subset of all transitions in the bundle whose details are explicitly provided; the remaining ones are said to be *concealed*
+* `known_transitions`, a subset of all transitions in the bundle whose details are explicitly provided; the remaining ones are said to be *concealed*; when a known transition spends an assignment created by another transition of the same bundle, the spending transition must come after it in `known_transitions`, since validation processes them in order
 
 ```
 TransitionBundle {
@@ -71,7 +71,7 @@ TransitionBundle {
 Assignments are identified by the `Opout` structure, which contains:
 * the Identifier of the Operation that created this Assignment
 * assignment Type, distinguishing for instance token ownership from issuance Rights
-* assignment Number, the index of this assignment within the previous operation, akin to bitcoin's `vout`
+* assignment Number, the index of this assignment among the assignments of the same type in the previous operation, akin to bitcoin's `vout`
 ```
 Opout {
     op: OpId,
@@ -110,7 +110,7 @@ Where:
     * 16-bit assignment number
 * `OpId_i` is the Operation Identifier of the State Transition which spends the `i`-th
     Assignment
-* `Opouts` are sorted lexicographically to obtain a deterministic `BundleId`
+* map entries are sorted by `Opout` to obtain a deterministic `BundleId`: first by the `op` bytes, then by `ty` and then by `no`, the last two compared as numbers
 
 **Note:** A given `OpId` may appear multiple times if a transition spends multiple assignments, but the opposite is not true. An `Opout` can only be spent by a single State Transition, which guarantees the absence of double spends if we consider that the corresponding seal is closed by the witness transaction. As a consequence, some State Transition may be omitted (concealed) from the Bundle for privacy reasons, while their OpId inside the input map ensures that no other (possibly concealed) transition can spend the same Opout(s).
 

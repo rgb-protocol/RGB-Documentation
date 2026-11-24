@@ -83,6 +83,8 @@ This schema defines an inflatable fungible asset, involving the following data:
     from `A` to `B` should only be considered valid if `A.LinkedToContract` is `B`
     AND `B.LinkedFromContract` is `A`; this guarantees that the issuers of both assets
     are willing to consider them the same economic structure
+- BurnedAsset, BurnedInflation, BurnReason: set by Burn transitions; they record the
+    amount of assets and of inflation rights burned by each burn, and an optional reason
 
 Additionally to the owned state representing the asset's allocation, an IFA asset can
 optionally define rights:
@@ -98,11 +100,14 @@ The following operations are supported for the asset:
 - Inflate: use an inflation right to issue a certain amount of assets in circulation,
     which can be optionally split into more than one allocation. The remaining inflation
     right (if any) can also optionally be split into more than one allocation
-- Burn: burn (asset or right) allocations by adding them as input to a burn transition.
-    Fungible allocations can be burned partially by adding change outputs; the burned
-    amount must be non-zero and must be declared in a metadata, which can be used as
-    source of truth. Non-fungible allocations must be burned in full, so they have no
-    output.
+- Burn: burn asset allocations, inflation rights or the link right by adding them as
+    inputs to a burn transition. The burn transition has no outputs, so allocations are
+    always burned in full; to burn only part of an allocation, first transfer the desired
+    amount to a separate allocation. The burned amounts are declared in the global states
+    `burnedAsset` and `burnedInflation`: when inputs of the corresponding type are burned,
+    the global state must be present, non-zero and equal to the sum of those inputs;
+    otherwise it must be absent. An optional `burnReason` (a 32-byte value) can also be
+    recorded.
 
     This transition allows to prove to a third party that some right or a certain amount
     of assets no longer exists, e.g. as part of a protocol with wider scope
@@ -130,8 +135,11 @@ for which there are legal constraints on the potential owners. It involves the f
 The following operations are supported for the asset:
 - Transfer: send some amount of assets to a number of destinations (optionally including
     change); it supports multiple inputs in case multiple allocations should be merged in
-    order to build up the desired output amount and it must have a metadata containing the
-    issuer's signature, which is checked by the receiving wallet using the Pubkey in Genesis
+    order to build up the desired output amount. Every transfer must carry the issuer's
+    signature in the transition `signature` field: it is an ECDSA signature over the
+    transition `OpId`, verified by the schema validation script (`vts` instruction) against
+    the Pubkey set in Genesis, so a transfer without a valid signature is invalid by
+    consensus
 
 ---
 

@@ -123,8 +123,8 @@ flowchart BT
 
 Currently, RGB has four consensus commitments: schema, operation, bundle and seal.
 Operation commitment for genesis has a second representation, named contract id,
-which uses reversed-byte encoding and a special string serialization, but is
-generated with the same procedure as the operation commitment.
+which has the same bytes as the genesis operation id but a different string
+serialization (Baid64 with the `rgb:` prefix instead of hex).
 
 The commitment ids can be generated with either type-specific methods
 (`schema_id()` for schema, `bundle_id()` for transition bundle and `id()` for any
@@ -185,6 +185,7 @@ Other collections such as metadata are simply strict-serialized, producing a `St
 flowchart LR
   subgraph "Common data"
     Ffv --> OpCommitment
+    Nonce --> OpCommitment
     TypeCommitment --> OpCommitment
     Metadata -- StrictHash --> OpCommitment
     Globals -- Merklize --> OpCommitment
@@ -194,7 +195,10 @@ flowchart LR
 
   subgraph "Genesis"
     schemaId --> BaseCommitment
+    timestamp --> BaseCommitment
+    issuer -- StrictHash --> BaseCommitment
     chainNet --> BaseCommitment
+    sealClosingStrategy --> BaseCommitment
   end
 
   subgraph "Transition"
@@ -205,11 +209,16 @@ flowchart LR
   BaseCommitment --> TypeCommitment
 
   OpCommitment -- hash --> OpId
-  OpId -- "reverse bytes\n(genesis only)" --> ContractId
+  OpId -- "same bytes\n(genesis only)" --> ContractId
 ```
 
-Additionally to `OpId`, genesis produces `ContractId`, which is made out of the
-genesis `OpId` by reversing byte order and using Base58 encoding.
+`OpCommitment` also contains a `nonce` field: the transition `nonce` for state
+transitions, and `u64::MAX` for genesis. The optional transition `signature` is not
+part of the `OpCommitment`, so it does not affect the `OpId`.
+
+Additionally to `OpId`, genesis produces `ContractId`, which has the same bytes as the
+genesis `OpId` (no byte reversal) and is displayed using Baid64 encoding with the
+`rgb:` prefix.
 
 ### Bundle ID
 
